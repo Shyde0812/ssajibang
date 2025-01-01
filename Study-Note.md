@@ -15,6 +15,15 @@ package-lock.json: 의존성 버전과 의존 관계를 정확히 기록하여 �
 
 ## 1. 프로젝트 폴더 구조 만들기
 프로젝트 디렉토리 구조는 보통 다음과 같은 형태로 설정합니다: <br>
+```/my-phaser-game
+├── /assets       # 이미지, 스프라이트 시트, 사운드 등 게임 리소스
+├── index.html    # 게임을 실행할 HTML 파일
+├── main.js       # 게임의 로직을 담은 JavaScript 파일
+├── package.json  # 프로젝트의 설정 및 의존성 파일
+└── /node_modules # npm으로 설치된 의존성```
+
+## 2. `index.html`파일 생성
+Phaser 게임을 실행할 HTML 파일을 생성합니다. index.html 파일을 만들어서 Phaser 3를 로드하고, 게임을 실행할 수 있도록 설정합니다.<br>
 ```<!DOCTYPE html>
 <html lang="en">
 <head>
