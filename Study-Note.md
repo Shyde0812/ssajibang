@@ -24,7 +24,7 @@ package-lock.json: 의존성 버전과 의존 관계를 정확히 기록하여 �
 
 ## 2. `index.html`파일 생성
 Phaser 게임을 실행할 HTML 파일을 생성합니다. index.html 파일을 만들어서 Phaser 3를 로드하고, 게임을 실행할 수 있도록 설정합니다.<br>
-```<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -35,4 +35,4 @@ Phaser 게임을 실행할 HTML 파일을 생성합니다. index.html 파일을 
     <script src="node_modules/phaser/dist/phaser.min.js"></script>
     <script src="main.js"></script> <!-- 여기에 게임의 JavaScript 파일을 연결 -->
 </body>
-</html>```
+</html>
