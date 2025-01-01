@@ -15,7 +15,7 @@ package-lock.json: 의존성 버전과 의존 관계를 정확히 기록하여 �
 
 ## 1. 프로젝트 폴더 구조 만들기
 프로젝트 디렉토리 구조는 보통 다음과 같은 형태로 설정합니다: <br>
-'''<!DOCTYPE html>
+```<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -26,4 +26,4 @@ package-lock.json: 의존성 버전과 의존 관계를 정확히 기록하여 �
     <script src="node_modules/phaser/dist/phaser.min.js"></script>
     <script src="main.js"></script> <!-- 여기에 게임의 JavaScript 파일을 연결 -->
 </body>
-</html>'''
+</html>```
