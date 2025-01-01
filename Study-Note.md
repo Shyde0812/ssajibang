@@ -67,6 +67,7 @@ const config = {
 const game = new Phaser.Game(config); // Phaser.Game 객체 생성 및 설정
 ```
 - `new Phaser.Game(config)`: `config` 객체를 이용하여 새로운 Phaser 게임 인스턴스를 생성합니다. 이때 앞서 정의한 씬이 실행됩니다.
-
+- 찾아보니까 :
+맞습니다! const game = new Phaser.Game(config); 이 구문은 Phaser 3로 게임을 개발할 때 필수적으로 포함되는 코드입니다.
 
 
