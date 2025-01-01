@@ -41,3 +41,32 @@ Phaser 게임을 실행할 HTML 파일을 생성합니다. index.html 파일을 
 </html>
 ```
 
+- **phaser.min.js**는 node_modules/phaser/dist 폴더에 설치된 Phaser 3의 라이브러리입니다.
+- main.js는 게임의 로직을 작성할 파일입니다.
+
+## 3. `main.js` 파일 생성
+### 1. 게임 설정 (`config 객체`)
+```
+const config = {
+    type: Phaser.AUTO,  // Phaser가 자동으로 사용할 렌더러 선택 (WebGL 또는 Canvas)
+    width: 800,         // 게임 화면의 가로 크기 (픽셀 단위)
+    height: 600,        // 게임 화면의 세로 크기 (픽셀 단위)
+    scene: {            // 게임 씬 설정
+        preload: preload,  // 'preload' 단계에서 사용할 함수 (리소스를 미리 로드)
+        create: create,    // 'create' 단계에서 사용할 함수 (게임 객체 초기화)
+        update: update     // 'update' 단계에서 사용할 함수 (매 프레임마다 호출되는 함수)
+    }
+};
+```
+- preload: 게임에서 사용할 리소스를 미리 로드합니다.
+- create: 게임 객체를 생성하고, 물리 엔진을 설정합니다.
+- update: 매 프레임마다 실행되어 플레이어의 이동과 같은 동작을 처리합니다.
+
+### 2. 게임 객체 생성(`Phaser.Game`)
+```
+const game = new Phaser.Game(config); // Phaser.Game 객체 생성 및 설정
+```
+- `new Phaser.Game(config)`: `config` 객체를 이용하여 새로운 Phaser 게임 인스턴스를 생성합니다. 이때 앞서 정의한 씬이 실행됩니다.
+
+
+
