@@ -83,3 +83,33 @@ function preload() {
 #### `this`가 필요한 이유 : <br>
 - Phaser 3에서 씬(예: preload, create, update) 함수들은 모두 씬 객체의 메서드입니다. 이들 함수 내에서 this를 사용해 현재 씬의 속성과 메서드에 접근할 수 있습니다
 - this 없이 접근하면 오류가 발생할 수 있기 때문에 꼭 this를 붙여야 합니다.
+
+### 4. 게임 객체 생성 및 설정 (`create` 함수)
+```
+function create() {
+    this.add.image(400, 300, 'background');  // 배경을 (400, 300) 위치에 추가
+    this.player = this.physics.add.sprite(400, 500, 'player');  // (400, 500) 위치에 플레이어 스프라이트 추가
+    this.cursors = this.input.keyboard.createCursorKeys();  // 키보드 입력 설정 (방향키)
+}
+```
+- this.add.image(400, 300, 'background'): 배경 이미지를 (400, 300) 위치에 추가합니다. (게임 화면의 중심에 배치)
+- this.player = this.physics.add.sprite(400, 500, 'player'): (400, 500) 위치에 플레이어 스프라이트를 추가하고, Phaser의 물리 엔진(physics)을 적용하여 스프라이트를 추가합니다.
+- this.cursors = this.input.keyboard.createCursorKeys(): 방향키 입력을 감지하기 위해 createCursorKeys 메서드를 사용하여 this.cursors 객체를 만듭니다. 이 객체를 통해 플레이어의 이동을 제어합니다.
+
+### 5. 게임 루프 및 플레이어 이동 (`update` 함수)
+```
+function update() {
+    if (this.cursors.left.isDown) {      // 왼쪽 방향키가 눌렸을 때
+        this.player.x -= 5;                // 플레이어를 왼쪽으로 5만큼 이동
+    } else if (this.cursors.right.isDown) { // 오른쪽 방향키가 눌렸을 때
+        this.player.x += 5;                // 플레이어를 오른쪽으로 5만큼 이동
+    }
+    if (this.cursors.up.isDown) {         // 위쪽 방향키가 눌렸을 때
+        this.player.y -= 5;                // 플레이어를 위로 5만큼 이동
+    } else if (this.cursors.down.isDown) { // 아래쪽 방향키가 눌렸을 때
+        this.player.y += 5;                // 플레이어를 아래로 5만큼 이동
+    }
+}
+```
+- update 함수: Phaser 3는 update 함수를 사용하여 매 프레임마다 게임의 상태를 업데이트합니다. 여기에서는 플레이어가 방향키 입력에 따라 이동하는 로직을 처리합니다.
+
