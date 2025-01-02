@@ -70,4 +70,16 @@ const game = new Phaser.Game(config); // Phaser.Game 객체 생성 및 설정
 - 찾아보니까 :
 맞습니다! const game = new Phaser.Game(config); 이 구문은 Phaser 3로 게임을 개발할 때 필수적으로 포함되는 코드입니다.
 
+### 3. 리소스 로드 (`preload`함수)
+```
+function preload() {
+    this.load.image('background', 'assets/background.png');  // 배경 이미지 로드
+    this.load.spritesheet('player', 'assets/player.png', { frameWidth: 32, frameHeight: 32 });  // 플레이어 스프라이트 로드
+}
+```
+- this.load.image('background', 'assets/background.png'): assets/background.png 경로에 있는 배경 이미지를 로드합니다. 이 이미지는 background라는 키로 접근할 수 있습니다.
+- this.load.spritesheet('player', 'assets/player.png', { frameWidth: 32, frameHeight: 32 }): 플레이어의 스프라이트 시트를 로드합니다. frameWidth와 frameHeight는 스프라이트 시트에서 각 프레임의 크기를 정의합니다. 예시에서는 32x32 크기로 설정되어 있습니다.
 
+- + `this`가 필요한 이유 : <br>
+- - Phaser 3에서 씬(예: preload, create, update) 함수들은 모두 씬 객체의 메서드입니다. 이들 함수 내에서 this를 사용해 현재 씬의 속성과 메서드에 접근할 수 있습니다
+- - this 없이 접근하면 오류가 발생할 수 있기 때문에 꼭 this를 붙여야 합니다.
