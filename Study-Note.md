@@ -80,6 +80,6 @@ function preload() {
 - this.load.image('background', 'assets/background.png'): assets/background.png 경로에 있는 배경 이미지를 로드합니다. 이 이미지는 background라는 키로 접근할 수 있습니다.
 - this.load.spritesheet('player', 'assets/player.png', { frameWidth: 32, frameHeight: 32 }): 플레이어의 스프라이트 시트를 로드합니다. frameWidth와 frameHeight는 스프라이트 시트에서 각 프레임의 크기를 정의합니다. 예시에서는 32x32 크기로 설정되어 있습니다.
 
-+ `this`가 필요한 이유 : <br>
-- - Phaser 3에서 씬(예: preload, create, update) 함수들은 모두 씬 객체의 메서드입니다. 이들 함수 내에서 this를 사용해 현재 씬의 속성과 메서드에 접근할 수 있습니다
-- - this 없이 접근하면 오류가 발생할 수 있기 때문에 꼭 this를 붙여야 합니다.
+#### `this`가 필요한 이유 : <br>
+- Phaser 3에서 씬(예: preload, create, update) 함수들은 모두 씬 객체의 메서드입니다. 이들 함수 내에서 this를 사용해 현재 씬의 속성과 메서드에 접근할 수 있습니다
+- this 없이 접근하면 오류가 발생할 수 있기 때문에 꼭 this를 붙여야 합니다.
