@@ -121,20 +121,27 @@ export default class MainScene extends Phaser.Scene {
     }
 }
 ```
-1. `export defalt`
+1. **`export defalt`**
 - 이 구문은 해당 클래스를 기본 내보내기(default export)로 지정하여 다른 파일에서 쉽게 import 할 수 있게 합니다.<br>
 예를 들어, 다른 파일에서 이 클래스를 가져오려면 다음과 같이 작성할 수 있습니다:
 ```
 import MainScene from './MainScene';  // MainScene을 불러오기
 ```
 
-2. `class MainScene extends Phaser.Scene`
+2. **`class MainScene extends Phaser.Scene`**
 - class MainScene: JavaScript 클래스 정의 구문입니다. 여기서 MainScene은 Phaser 3 게임에서 사용할 씬의 이름입니다.
 
 - extends Phaser.Scene: 이 클래스는 Phaser 3의 Scene 클래스를 상속합니다. 즉, MainScene은 Phaser의 기본 Scene 클래스를 확장하여 Phaser의 씬 기능을 사용할 수 있습니다.
 
 - Scene 클래스는 Phaser에서 게임을 구성하는 하나의 독립적인 화면을 의미합니다. 즉, 게임의 한 단계를 담당하는 객체입니다.
 
+3. **`constructor`**
+- **constructor()**는 클래스가 새로운 인스턴스로 생성될 때 호출되는 특수한 함수입니다.
+- Phaser에서 Scene을 정의할 때, 각 씬을 구체적으로 설정할 수 있도록 **constructor**가 사용됩니다.<br>
 
+- `super("mainScene"):`
+    - super()는 상속받은 부모 클래스의 생성자를 호출하는 데 사용됩니다. 여기서는 Phaser.Scene 클래스의 생성자를 호출합니다.
+    - "mainScene"은 이 씬에 대한 이름을 지정하는 문자열입니다. 이 이름은 Phaser 게임에서 해당 씬을 식별하는 데 사용됩니다.
+    - 씬의 이름은 Phaser 게임에서 씬을 전환할 때 사용됩니다.
 
 
