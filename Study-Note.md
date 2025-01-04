@@ -144,4 +144,15 @@ import MainScene from './MainScene';  // MainScene을 불러오기
     - "mainScene"은 이 씬에 대한 이름을 지정하는 문자열입니다. 이 이름은 Phaser 게임에서 해당 씬을 식별하는 데 사용됩니다.
     - 씬의 이름은 Phaser 게임에서 씬을 전환할 때 사용됩니다.
 
+### 씬을 사용하는 예시
+```
+// 게임 설정
+const config = {
+    type: Phaser.AUTO,
+    width: 800,
+    height: 600,
+    scene: [MainScene]  // MainScene을 게임 씬으로 지정
+};
 
+const game = new Phaser.Game(config);
+```
