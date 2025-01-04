@@ -113,3 +113,28 @@ function update() {
 ```
 - update 함수: Phaser 3는 update 함수를 사용하여 매 프레임마다 게임의 상태를 업데이트합니다. 여기에서는 플레이어가 방향키 입력에 따라 이동하는 로직을 처리합니다.
 
+# 코드 설명
+```
+export default class MainScene extends Phaser.Scene {
+    constructor() {
+        super("mainScene");
+    }
+}
+```
+1. `export defalt`
+- 이 구문은 해당 클래스를 기본 내보내기(default export)로 지정하여 다른 파일에서 쉽게 import 할 수 있게 합니다.<br>
+예를 들어, 다른 파일에서 이 클래스를 가져오려면 다음과 같이 작성할 수 있습니다:
+```
+import MainScene from './MainScene';  // MainScene을 불러오기
+```
+
+2. `class MainScene extends Phaser.Scene`
+- class MainScene: JavaScript 클래스 정의 구문입니다. 여기서 MainScene은 Phaser 3 게임에서 사용할 씬의 이름입니다.
+
+- extends Phaser.Scene: 이 클래스는 Phaser 3의 Scene 클래스를 상속합니다. 즉, MainScene은 Phaser의 기본 Scene 클래스를 확장하여 Phaser의 씬 기능을 사용할 수 있습니다.
+
+- Scene 클래스는 Phaser에서 게임을 구성하는 하나의 독립적인 화면을 의미합니다. 즉, 게임의 한 단계를 담당하는 객체입니다.
+
+
+
+
