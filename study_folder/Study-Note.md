@@ -114,7 +114,7 @@ function update() {
 - update 함수: Phaser 3는 update 함수를 사용하여 매 프레임마다 게임의 상태를 업데이트합니다. 여기에서는 플레이어가 방향키 입력에 따라 이동하는 로직을 처리합니다.
 
 # 코드 설명
-## - 기본적인 객체지향 이해
+## `기본적인 객체지향 이해`
 ```
 export default class MainScene extends Phaser.Scene {
     constructor() {
@@ -158,7 +158,7 @@ const config = {
 const game = new Phaser.Game(config);
 ```
 
-## - Phaser 타이머 이벤트
+## `Phaser 타이머 이벤트`
 ```
 this.m_events = [];
         this.m_events.push(
@@ -192,7 +192,7 @@ this.m_events.forEach(event => event.remove());
 ```
 - 필요할때 이벤트를 제거하거나 관리하기 쉬움
 
-## - update 호출
+## `update 호출`
 ```
 scene.events.on("update" , (time, delta) => {
             this.update(time, delta);
@@ -216,5 +216,19 @@ scene.events.on("update" , (time, delta) => {
 
 - 자바스크립트에서는 같은 이름의 함수(update)를 여러 번 정의할 수 없습니다. 함수 이름이 동일하다면 가장 마지막에 정의된 함수가 덮어쓰게 됩니다. 따라서 update()와 update(time, delta)를 동시에 정의하려 하면 항상 마지막에 정의된 함수만 유효합니다.
 
-## this.body
+## `this.body`
 - this.body는 Phaser의 Physics Body 객체를 참조합니다. Phaser에서 Arcade Physics를 사용하는 경우, 모든 물리 객체에는 body라는 속성이 자동으로 생성되며, 이는 해당 객체의 물리적 속성을 관리하는 데 사용됩니다.
+
+## `@param` 주석
+```
+/**
+ * 특정 좌표에서 이동하는 함수
+ * @param {Number} x - 이동할 x 좌표
+ * @param {Number} y - 이동할 y 좌표
+ */
+```
+@param 형태는 함수나 메서드의 매개변수에 대한 설명을 달 때 사용됩니다.
+- `@param`: 해당 함수 또는 메서드의 매개변수를 설명하는 데 사용
+- `{Number}`: 매개변수 `y`의 자료형을 지정
+- `y`: 매개변수의 이름
+@param {Type} name 형태로, 매개변수의 자료형(Type)과 이름(name)을 설명하며, 추가적으로 설명을 덧붙일 수 있습니다.
