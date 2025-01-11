@@ -302,3 +302,15 @@ this.m_mobs.remove(firstMob, true, true);
 // 그룹 내 객체 확인
 console.log(this.m_mobs.getChildren()); // [Mob, Mob, Mob...]
 ```
+
+### 추가 주의 사항
+만약 Group의 event를 지우고 싶다?
+```
+export function removeOldestMobEvent(scene) {
+    scene.m_mobEvents[0].remove();
+    scene.m_mobEvents.shift();
+}
+```
+이 예제 처럼 `remove`와 `shift`를 같이 사용해야함
+- remove()만 호출: Phaser 이벤트만 제거. 배열에는 그대로 남아 있음.
+- remove()와 shift()를 함께 호출: Phaser 이벤트도 제거하고, 배열에서도 삭제하여 데이터와 상태가 일치함.
