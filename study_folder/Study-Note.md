@@ -114,6 +114,7 @@ function update() {
 - update 함수: Phaser 3는 update 함수를 사용하여 매 프레임마다 게임의 상태를 업데이트합니다. 여기에서는 플레이어가 방향키 입력에 따라 이동하는 로직을 처리합니다.
 
 # 코드 설명
+## 기본적인 객체지향 이해
 ```
 export default class MainScene extends Phaser.Scene {
     constructor() {
@@ -156,3 +157,37 @@ const config = {
 
 const game = new Phaser.Game(config);
 ```
+
+## Phaser 타이머 이벤트
+```
+this.m_events = [];
+        this.m_events.push(
+            this.scene.time.addEvent({
+                delay: 100,
+                callback: () => {
+                    scene.physics.moveToObject(this, scene.m_player, this.m_speed);
+                },
+                loop: true,
+            })
+        )
+```
+
+1. **`this.scene.time.addEvent`**
+- Phaser에서 제공하는 타이머 이벤트를 추가합니다.
+- 이 이벤트는 일정 시간 마다 콜백 함수 (`callback`)을 실행하도록 설정
+
+2. **`scene.physics.moveToObject(이동하려는 객체 , 목표 객체 , 이동속도 (pixel/sec)`** 
+- 현재 객체 (this)를 플레이어 (scene.m_player) 방향으로 움직이도록 설정
+- `loop: true` : 무한히 반복
+
+3. 이벤트 배열에 저장
+```
+this.m_events.push(
+    this.scene.time.addEvent({...})
+);
+```
+```
+ex)
+this.m_events.forEach(event => event.remove());
+```
+- 필요할때 이벤트를 제거하거나 관리하기 쉬움
