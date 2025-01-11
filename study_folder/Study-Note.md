@@ -158,18 +158,18 @@ const config = {
 const game = new Phaser.Game(config);
 ```
 
-## `Phaser 타이머 이벤트`
+## `Phaser 타이머 이벤트` 중요한거 같은데
 ```
 this.m_events = [];
-        this.m_events.push(
-            this.scene.time.addEvent({
-                delay: 100,
-                callback: () => {
-                    scene.physics.moveToObject(this, scene.m_player, this.m_speed);
-                },
-                loop: true,
-            })
-        )
+this.m_events.push(
+    this.scene.time.addEvent({
+        delay: 100,
+        callback: () => {
+            scene.physics.moveToObject(this, scene.m_player, this.m_speed);
+        },
+        loop: true,
+    })
+)
 ```
 
 1. **`this.scene.time.addEvent`**
@@ -181,16 +181,60 @@ this.m_events = [];
 - `loop: true` : 무한히 반복
 
 3. 이벤트 배열에 저장
+- `m_events` 배열 안에는 **Phaser.Time.TimerEvent** 객체들이 저장됨
+- `scene.time.addEvent()`가 반환하는 것이 TimerEvent 객체
+### 실제예시
 ```
-this.m_events.push(
-    this.scene.time.addEvent({...})
-);
+[
+    {
+        delay: 100,                       // 0.1초 딜레이
+        callback: [Function],             // moveToObject 호출 함수
+        callbackScope: <MonsterObject>,   // this (타이머를 소유한 객체)
+        loop: true,                       // 반복 여부
+        elapsed: 0,                       // 경과 시간 (밀리초)
+        repeatCount: Infinity,            // 반복 횟수 (무한 반복)
+        timeScale: 1,                     // 타임스케일
+        startAt: <timestamp>,             // 타이머 시작 시간
+        paused: false                     // 일시정지 상태
+    },
+    {
+        delay: 500,                       // 0.5초 딜레이
+        callback: [Function],             // 다른 행동을 위한 함수
+        callbackScope: <AnotherObject>,   // 다른 객체
+        loop: true,
+        elapsed: 0,
+        repeatCount: 10,                  // 10번 반복 후 종료
+        timeScale: 1,
+        startAt: <timestamp>,
+        paused: false
+    },
+    ...
+]
 ```
+- 이런 식으로 TimerEvent 객체로 구성됨
+- 배열의 형태로 저장하면, 여러 타이머를 하나의 배열에서 관리
+
+#### 관리방법
+1. 배열 순회
 ```
-ex)
-this.m_events.forEach(event => event.remove());
+this.m_events.forEach(event => {
+    event.destroy();  // 각 TimerEvent 객체 삭제
+});
+this.m_events = []; // 배열 초기화
 ```
-- 필요할때 이벤트를 제거하거나 관리하기 쉬움
+2. 개별 접근
+```
+this.m_events[0].paused = true;  // 첫 번째 TimerEvent 일시 정지
+this.m_events[1].destroy();     // 두 번째 TimerEvent 삭제
+```
+3.조건부 제어
+```
+this.m_events.forEach(event => {
+    if (event.delay === 100) {  // 딜레이가 100ms인 이벤트만
+        event.paused = true;    // 일시 정지
+    }
+});
+```
 
 ## `update 호출`
 ```
