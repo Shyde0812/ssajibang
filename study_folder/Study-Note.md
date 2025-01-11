@@ -277,3 +277,28 @@ scene.events.on("update" , (time, delta) => {
 - `y`: 매개변수의 이름 <br>
 @param {Type} name 형태로, 매개변수의 자료형(Type)과 이름(name)을 설명하며, 추가적으로 설명을 덧붙일 수 있습니다.
 함수에 마우스가져다 대면 설명뜨는데 그거 수정하는 거인듯
+
+## **`Group vs 배열`**
+- `this.m_mobs = this.physics.add.group();` 로 선언된 `m_mobs`는 단순한 배열 아님
+- Phaser의 `Group` 객체로, 배열처럼 동작 하지만, 더 많은 기능 제공
+
+### Physics Group 예제
+그룹에 포함된 모든 객체가 물리 엔진의 영향을 받을 수 있음
+```
+this.m_mobs = this.physics.add.group();
+
+// 몹 추가
+this.m_mobs.add(new Mob(this, x, y, texture));
+
+// 그룹 내 객체에 접근
+this.m_mobs.children.iterate((mob) => {
+    mob.setVelocity(100, 0); // 모든 몹을 오른쪽으로 이동
+});
+
+// 그룹에서 특정 객체 제거
+let firstMob = this.m_mobs.getFirstAlive();
+this.m_mobs.remove(firstMob, true, true);
+
+// 그룹 내 객체 확인
+console.log(this.m_mobs.getChildren()); // [Mob, Mob, Mob...]
+```
