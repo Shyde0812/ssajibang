@@ -192,4 +192,29 @@ this.m_events.forEach(event => event.remove());
 ```
 - 필요할때 이벤트를 제거하거나 관리하기 쉬움
 
-  
+## - update 호출
+```
+scene.events.on("update" , (time, delta) => {
+            this.update(time, delta);
+        });
+```
+1. **`scene.events`**
+- Phaser의 EventEmitter 객체입니다.
+- 씬(Scene)에서 발생하는 특정 이벤트를 처리할 수 있는 시스템입니다.
+
+2. **`.on("update", callback)`**
+- "update" 이벤트가 발생할 때마다 지정된 콜백 함수(callback)을 실행합니다.
+- "update" 이벤트는 매 프레임마다 발생하며, 게임 루프의 일부입니다.
+- Phaser 씬의 기본적인 update() 메서드 호출과 비슷한 시점에 동작합니다.
+
+3. **`(time, delta): 콜백 함수의 매개변수`**
+이 이벤트는 두 가지 인수를 전달합니다:
+- time: 게임이 시작된 후 경과한 시간(밀리초).
+- delta: 이전 프레임과 현재 프레임 사이의 시간 차이(밀리초).
+이 두 값을 사용하여 게임의 프레임 간 상태를 동기화하거나, 시간 기반 애니메이션 및 동작을 구현할 수 있습니다.
+걍 유니티 time.deltatime임
+
+- 자바스크립트에서는 같은 이름의 함수(update)를 여러 번 정의할 수 없습니다. 함수 이름이 동일하다면 가장 마지막에 정의된 함수가 덮어쓰게 됩니다. 따라서 update()와 update(time, delta)를 동시에 정의하려 하면 항상 마지막에 정의된 함수만 유효합니다.
+
+## this.body
+- this.body는 Phaser의 Physics Body 객체를 참조합니다. Phaser에서 Arcade Physics를 사용하는 경우, 모든 물리 객체에는 body라는 속성이 자동으로 생성되며, 이는 해당 객체의 물리적 속성을 관리하는 데 사용됩니다.
