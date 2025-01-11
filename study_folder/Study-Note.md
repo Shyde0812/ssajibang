@@ -232,3 +232,4 @@ scene.events.on("update" , (time, delta) => {
 - `{Number}`: 매개변수 `y`의 자료형을 지정
 - `y`: 매개변수의 이름 <br>
 @param {Type} name 형태로, 매개변수의 자료형(Type)과 이름(name)을 설명하며, 추가적으로 설명을 덧붙일 수 있습니다.
+함수에 마우스가져다 대면 설명뜨는데 그거 수정하는 거인듯
