@@ -175,6 +175,9 @@ this.m_events.push(
 1. **`this.scene.time.addEvent`**
 - Phaser에서 제공하는 타이머 이벤트를 추가합니다.
 - 이 이벤트는 일정 시간 마다 콜백 함수 (`callback`)을 실행하도록 설정
+- - `callback`: 이벤트가 발생할 때 실행될 함수.
+  - `callbackScope`: `callback`이 실행될 때의 `this`를 명시적으로 설정.
+  - callback 내부에서의 this는 undefined 또는 전역 객체를 가리키게 되어 this.alpha나 this.m_canBeAttacked를 사용할 때 오류가 발생합니다.
 
 2. **`scene.physics.moveToObject(이동하려는 객체 , 목표 객체 , 이동속도 (pixel/sec)`** 
 - 현재 객체 (this)를 플레이어 (scene.m_player) 방향으로 움직이도록 설정
