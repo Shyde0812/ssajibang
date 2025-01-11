@@ -183,9 +183,9 @@ this.m_events.push(
 3. 이벤트 배열에 저장
 - `m_events` 배열 안에는 **Phaser.Time.TimerEvent** 객체들이 저장됨
 - `scene.time.addEvent()`가 반환하는 것이 TimerEvent 객체
-### 실제예시
+### `실제예시`
 ```
-[
+this.m_events = [
     {
         delay: 100,                       // 0.1초 딜레이
         callback: [Function],             // moveToObject 호출 함수
@@ -198,18 +198,18 @@ this.m_events.push(
         paused: false                     // 일시정지 상태
     },
     {
-        delay: 500,                       // 0.5초 딜레이
-        callback: [Function],             // 다른 행동을 위한 함수
-        callbackScope: <AnotherObject>,   // 다른 객체
-        loop: true,
-        elapsed: 0,
-        repeatCount: 10,                  // 10번 반복 후 종료
-        timeScale: 1,
-        startAt: <timestamp>,
-        paused: false
-    },
-    ...
-]
+        delay: repeatGap,                 // 두 번째 타이머의 딜레이
+        callback: [Function],             // Mob 생성 함수
+        callbackScope: <SceneObject>,     // 이 타이머를 소유한 씬
+        loop: true,                       // 반복 여부
+        elapsed: 0,                       // 경과 시간 (밀리초)
+        repeatCount: Infinity,            // 반복 횟수 (무한 반복)
+        timeScale: 1,                     // 타이머의 타임스케일
+        startAt: <timestamp>,             // 타이머 시작 시간
+        paused: false                     // 일시정지 상태
+    }
+];
+
 ```
 - 이런 식으로 TimerEvent 객체로 구성됨
 - 배열의 형태로 저장하면, 여러 타이머를 하나의 배열에서 관리
