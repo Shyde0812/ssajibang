@@ -14,6 +14,8 @@ export const mapConfig = {
       ],
     },
     bossmap: {
+      width : 2400,
+      heigt : 1600,
       tileset: bossmapTileSet,
       json: bossmapJson,
       layers: [

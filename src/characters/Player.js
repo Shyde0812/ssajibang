@@ -9,7 +9,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         // 화면의 가운데에 player를 추가합니다.
         // scene.add.existing : scene에 오브젝트를 추가
         // scene.phsyics.add.existing : scene의 물리엔진에 오브젝트를 추가 
-        super(scene, Config.width / 2 , Config.height / 2 , "player_idle");
+        super(scene, scene.map.Width / 2 , scene.map.Height / 2 , "player_idle");
         scene.add.existing(this);
         scene.physics.add.existing(this);
 

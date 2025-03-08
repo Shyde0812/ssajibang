@@ -1,15 +1,12 @@
 import Phaser, { Tilemaps } from 'phaser';
 import Config from '../Config';
 import Player from "../characters/Player";
-import Mob from "../characters/Mobs";
-import HpBar from "../ui/HpBar";
-import ExpBar from "../ui/ExpBar";
 import attackConfig from "../Config/AttackConfig";
+import MobFactory from '../utils/mobFactory';
 
 import { setBackground, setTilemapBackground } from '../utils/backgroundManager';
-import { addMob, addMobEvent, removeOldestMobEvent } from "../utils/mobManager";
 import { AttackEvent} from '../utils/attackManager';
-import Explosion from '../effects/Explosion';
+
 
 export default class PlayingScene extends Phaser.Scene
 {
@@ -45,13 +42,14 @@ export default class PlayingScene extends Phaser.Scene
     const currentMap = 'bossmap'; // 또는 동적으로 결정된 맵 이름
   
     // PlayScene의 background를 설정합니다.
-    setTilemapBackground(this, currentMap);
+    this.map = setTilemapBackground(this, currentMap);
     //setBackground(this, "bg");
 
     this.m_player = new Player(this);
 
     // Phaser에서 카메라가 특정 게임 오브젝트를 따라가도록 설정하는 코드입니다.
     this.cameras.main.startFollow(this.m_player);
+    
 
     // mouse
     this.input.mouse.disableContextMenu();
@@ -84,8 +82,10 @@ export default class PlayingScene extends Phaser.Scene
     };
 
     // Mob
+    
     this.m_mobs = this.physics.add.group();
-    this.m_mobs.add(new Mob(this, 980, 500, "boss", "boss_idle", 100))
+    const medusa = MobFactory.createMob(this, "medusa", this.map.Width / 2, 256);
+    if (medusa) this.m_mobs.add(medusa);
     this.m_mobEvents = [];
 
     // scene, repeatGap, mobTexture, mobAnim, mobHp, mobDropRate
@@ -121,19 +121,12 @@ export default class PlayingScene extends Phaser.Scene
       this
     );
 
-    // BARS
-    this.m_expBar = new ExpBar(this, 50)
-
     
   }
 
   update() {
     
     this.attackPlayerManager();
-
-    // if(this.m_player.m_attacking) {
-    //   this.stopPlayer();
-    // }
 
     if (this.m_player.m_moving) {
       let distanceToTarget = Phaser.Math.Distance.Between(
@@ -160,21 +153,6 @@ export default class PlayingScene extends Phaser.Scene
     if(this.m_player.m_attacking) {
       return;
     }
-
-
-    // // Phaser 3의 tweens는 오브젝트의 속성을 일정한 속도로 변경해주는 애니메이션 시스템이야.
-    // // 크기, 투명도, 위치 등 여러가지 조절 가능
-    // this.tweens.add({
-    //   targets: this.m_player,
-    //   x: targetX,
-    //   y: targetY,
-    //   duration: distance / speed * 1000, // 시간 = 거리 / 속력
-    //   ease: "Linear",
-    //   onComplete: () => {
-    //       this.m_player.play("player_idle", true); // 이동이 끝나면 대기 애니메이션 실행
-    //       this.m_player.m_moving = false;
-    //   }
-    // });
 
     this.m_player.setVelocity(0, 0); // 기존 이동 멈추기
 

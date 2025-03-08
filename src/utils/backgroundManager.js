@@ -59,5 +59,10 @@ export function setTilemapBackground(scene, tilemapKey) {
     });
 
     scene.cameras.main.setBounds(0, 0, mapWidth, mapHeight); // 카메라의 이동 범위 제한
-    scene.map = map;
+
+    // map 객체에 width와 height 값을 추가
+    map.Width = mapWidth;
+    map.Height = mapHeight;
+
+    return map;
 }

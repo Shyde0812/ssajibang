@@ -1,5 +1,3 @@
-
-
 const attackConfig = {
     AutoAttack : { 
         steps: [
