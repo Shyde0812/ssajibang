@@ -1,9 +1,9 @@
 const attackConfig = {
     AutoAttack : { 
         steps: [
-            { effect: "Chop", damage: 100, scale: 5, anim: "pl_AA1", cooldown: 0.2 * 1000 },
-            { effect: "Chop", damage: 6, scale: 5, anim: "pl_AA2", cooldown: 0.2 * 1000 },
-            { effect: "Chop", damage: 8, scale: 5, anim: "pl_AA3", cooldown: 0.2 * 1000 }
+            { effect: "Chop", damage: 5, scale: 2, anim: "pl_AA1", cooldown: 0.2 * 1000 },
+            { effect: "Chop", damage: 6, scale: 2, anim: "pl_AA2", cooldown: 0.2 * 1000 },
+            { effect: "Chop", damage: 8, scale: 2, anim: "pl_AA3", cooldown: 0.2 * 1000 }
         ],
         comboTimeout: 1 * 1000 // 콤보 입력 가능 시간
         }

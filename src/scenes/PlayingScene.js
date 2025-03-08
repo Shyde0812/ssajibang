@@ -115,11 +115,34 @@ export default class PlayingScene extends Phaser.Scene
       this.m_weaponStatic,
       this.m_mobs,
       (weapon, mob) => {
+        if (!mob.hitboxes) {
           mob.hitByStatic(weapon.m_damage , weapon.duration);
+        }
       },
       null,
       this
     );
+
+    // Group 객체에서 getChildren()을 사용해 모든 몹을 배열로 가져오기
+    const mobs = this.m_mobs.getChildren();
+
+    // 복합 히트박스를 가진 보스에 대한 충돌 처리
+    mobs.forEach(mob => {
+      if (mob.hitboxes) {
+        mob.hitboxes.forEach(hitbox => {
+          this.physics.add.overlap(
+            this.m_weaponStatic,
+            hitbox,
+            (weapon, _) => {
+              // 히트박스 소유자(보스)에게 데미지 적용
+              mob.hitByStatic(weapon.m_damage, weapon.duration);
+            },
+            null,
+            this
+          );
+        });
+      }
+    });
 
     
   }

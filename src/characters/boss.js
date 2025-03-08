@@ -48,7 +48,31 @@ export default class boss extends Phaser.Physics.Arcade.Sprite {
     }
 
     initPhysics() {
-        if (this.config.bodySize) {
+
+        if(this.config.complexHitbox) {
+            this.body.setSize(1, 1);  // 완전히 0으로 하면 문제가 생길 수 있어서 최소값으로 설정
+            this.body.setOffset(0, 0);  // 오프셋도 초기화
+
+            this.hitboxes = [];
+
+            for( const hiboxConfig of this.config.complexHitbox) {
+                // 각 히트박스를 몹에 상대적인 위치에 생성
+                const hitbox = this.scene.physics.add.existing(
+                    this.scene.add.zone(
+                        this.x + hiboxConfig.offsetX,
+                        this.y + hiboxConfig.offsetY,
+                        hiboxConfig.width,
+                        hiboxConfig.height
+                    ), false
+                );
+
+                // 히트박스를 활성화
+                hitbox.body.setAllowGravity(false);
+                
+                this.hitboxes.push(hitbox);
+            }
+
+        } else {
             this.setBodySize(this.config.bodySize[0] , this.config.bodySize[1]);
         }
     }
@@ -88,7 +112,14 @@ export default class boss extends Phaser.Physics.Arcade.Sprite {
         // ?
         if (this.m_isDead) return;
 
-        console.log("run");
+        // 히트박스들의 위치 업데이트
+        if (this.hitboxes) {
+            for (let i = 0; i < this.hitboxes.length; i++) {
+                const hitboxConfig = this.config.complexHitbox[i];
+                this.hitboxes[i].x = this.x + hitboxConfig.offsetX;
+                this.hitboxes[i].y = this.y + hitboxConfig.offsetY;
+            }
+        }
 
         // 바라 보는 방향이다.
         if (this.x < this.scene.m_player.x) this.flipX = true;

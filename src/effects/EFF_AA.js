@@ -14,7 +14,12 @@ export default class EFF_AA extends Phaser.Physics.Arcade.Sprite {
         scene.m_weaponStatic.add(this);
         //scene.m_scratchSound.play({ volum: 0.5 })
 
-        this.setBodySize(50, 50);
+        // 히트박스 크기 조절 (원하는 대로 조정 가능)
+        const hitboxWidth = 25 * scale;
+        const hitboxHeight = 25 * scale;
+        this.setBodySize(hitboxWidth, hitboxHeight);
+
+        //this.setBodySize(50, 50);
         this.setDepth(30);
 
         this.duration = duration
@@ -30,6 +35,17 @@ export default class EFF_AA extends Phaser.Physics.Arcade.Sprite {
 
         this.setRotation(angle); // 라디안 단위 적용
         this.setAngle(angle * (180 / Math.PI)); // degree 변환 후 적용 (시각적 요소)
+
+        // 히트박스 오프셋 거리 계산 (플레이어로부터 얼마나 떨어질지)
+        const offsetDistance = 50; // 필요에 따라 이 값 조정
+
+        // 히트박스가 위치해야 할 지점 계산
+        const offsetX = Math.cos(angle) * offsetDistance;
+        const offsetY = Math.sin(angle) * offsetDistance;
+        
+        // 스프라이트 위치 설정 (캐릭터 중심에서 마우스 방향으로 이동)
+        this.setPosition(startingPosition[0] + offsetX, startingPosition[1] + offsetY);
+
 
         // 공속에 맞게 사라지게
         scene.time.delayedCall(duration, () => {
