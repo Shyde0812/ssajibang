@@ -1,11 +1,16 @@
 import Phaser from "phaser";
+// maps
+import { mapConfig } from '../Config/mapConfig';
 // font
 import fontPng from "../assets/font/font.png";
 import fontXml from "../assets/font/font.xml";
 
 // maps
-import mapTileSet from "../assets/maps/Floor2.png";
-import mapJson from "../assets/maps/map.json";
+// import mapTileSet from "../assets/maps/Floor2.png";
+// import mapJson from "../assets/maps/map.json";
+
+// import bossmapTileSet from "../assets/maps/MainLev2.0.png";
+// import bossmapJson from "../assets/maps/bossMap.json";
 
 // images
 import beamImg from "../assets/images/beam.png";
@@ -32,6 +37,9 @@ import EFF_AA3Img from "../assets/spritesheets/effect/EFF_AA3.png";
 
 
 import explosionImg from "../assets/spritesheets/explosion.png";
+
+// ui
+import BossHpBarImg from "../assets/ui/BossHpBar.png";
 
 
 
@@ -66,13 +74,24 @@ export default class LoadingScene extends Phaser.Scene {
         this.load.bitmapFont("pixelFont", fontPng, fontXml);
 
         // MAPS
-        this.load.image('tiles', mapTileSet);
-        this.load.tilemapTiledJSON('map', mapJson);
+        // this.load.image('map_tiles', mapTileSet);
+        // this.load.tilemapTiledJSON('map', mapJson);
+
+        // this.load.image('bossmap_tiles', mapTileSet);
+        // this.load.tilemapTiledJSON('bossmap', mapJson);
+
+        for (const mapKey in mapConfig) {
+            this.load.image(`${mapKey}_tiles`, mapConfig[mapKey].tileset);
+            this.load.tilemapTiledJSON(mapKey, mapConfig[mapKey].json);
+        }
 
         // IMAGES
         this.load.image('beam', beamImg);
 
         this.load.image('bg', bgImg);
+
+        // ui
+        this.load.image('bossHpbar' , BossHpBarImg);
 
 
 
@@ -86,8 +105,8 @@ export default class LoadingScene extends Phaser.Scene {
 
         this.load.spritesheet('player_run', 
             player_runImg, {
-              frameWidth: 60,
-              frameHeight: 52
+              frameWidth: 70,
+              frameHeight: 60
         });
 
         this.load.spritesheet('player_attack', 
@@ -166,10 +185,7 @@ export default class LoadingScene extends Phaser.Scene {
         // FONTS
         this.add.text(20, 20, "Loading game...");
 
-        // TILE_MAP
-        const map = this.make.tilemap({ key: 'map' });
-        const tileset = map.addTilesetImage('Floor2', 'tiles');
-        const groundLayer = map.createLayer('ground' , tileset, 0 , 0);
+
 
         // ANIMATIONS
 
@@ -184,14 +200,14 @@ export default class LoadingScene extends Phaser.Scene {
         this.anims.create({
             key: "player_run",
             frames: this.anims.generateFrameNumbers("player_run"),
-            frameRate: 6, 
+            frameRate: 4, 
             repeat: -1,
         });
 
         this.anims.create({
             key: "player_attack",
             frames: this.anims.generateFrameNumbers("player_attack"),
-            frameRate: 12, // 3 = 1s
+            frameRate: 3, // 3 = 1s
             repeat: 0,
         });
 

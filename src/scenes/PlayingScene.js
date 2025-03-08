@@ -41,22 +41,17 @@ export default class PlayingScene extends Phaser.Scene
     this.m_pauseOutSound = this.sound.add("audio_pauseOut");
 
 
+    // TILE_MAP
+    const currentMap = 'bossmap'; // 또는 동적으로 결정된 맵 이름
   
     // PlayScene의 background를 설정합니다.
-    //const background = setTilemapBackground(this, "map" , "Floor2", "tiles", "ground");
+    setTilemapBackground(this, currentMap);
+    //setBackground(this, "bg");
 
-    setBackground(this, "bg");
-
-    // player를 m_player라는 멤벼 변수로 추가
-    // 여기 this = scene
     this.m_player = new Player(this);
 
-  
     // Phaser에서 카메라가 특정 게임 오브젝트를 따라가도록 설정하는 코드입니다.
-    this.cameras.main.startFollow(this.m_player, true);
-    
-
-
+    this.cameras.main.startFollow(this.m_player);
 
     // mouse
     this.input.mouse.disableContextMenu();
@@ -65,6 +60,7 @@ export default class PlayingScene extends Phaser.Scene
       if(pointer.rightButtonDown()) {
         this.targetX = pointer.worldX; // 클릭 했을 시 월드 좌표
         this.targetY = pointer.worldY;
+        //console.log(this.targetX , this.targetY);
         this.moveToTarget(this.targetX, this.targetY); // 목표 지점으로 이동
       }
     }, this); // this를 유지하도록 설정
@@ -102,6 +98,7 @@ export default class PlayingScene extends Phaser.Scene
 
 
     // COLLISIONS
+
     // Player와 mob이 부딪혔을 경우 player에게 데미지 10을 줍니다? 이건 몬스터마다 다르게 만들어야할듯
     // ( player.js 에서 hitByMob 함수 확인 )
     // this.physics.add.overlap(
@@ -134,17 +131,22 @@ export default class PlayingScene extends Phaser.Scene
     
     this.attackPlayerManager();
 
-    if(this.m_player.m_attacking) {
-      this.tweens.killTweensOf(this.m_player);
-    }
+    // if(this.m_player.m_attacking) {
+    //   this.stopPlayer();
+    // }
 
-    // 플레이어 따라 배경이동
-    this.m_background.setX(this.m_player.x - Config.width / 2);
-    this.m_background.setY(this.m_player.y - Config.height / 2);
+    if (this.m_player.m_moving) {
+      let distanceToTarget = Phaser.Math.Distance.Between(
+          this.m_player.x,
+          this.m_player.y,
+          this.targetX,
+          this.targetY
+      );
 
-    this.m_background.tilePositionX = this.m_player.x - Config.width / 2;
-    this.m_background.tilePositionY = this.m_player.y - Config.width / 2;
-
+      if (distanceToTarget < 5) { // 목표 지점 근처에 도착하면 멈춤
+          this.stopPlayer();
+      }
+  }
 
     const closest = this.physics.closest(
       this.m_player,
@@ -159,13 +161,26 @@ export default class PlayingScene extends Phaser.Scene
       return;
     }
 
-    // 기존 tween 정리 
-    this.tweens.killTweensOf(this.m_player);
 
-    const dx = targetX - this.m_player.x;
-    const distance = Phaser.Math.Distance.Between(this.m_player.x, this.m_player.y, targetX, targetY);
-  
-    const speed = 2 * 100;
+    // // Phaser 3의 tweens는 오브젝트의 속성을 일정한 속도로 변경해주는 애니메이션 시스템이야.
+    // // 크기, 투명도, 위치 등 여러가지 조절 가능
+    // this.tweens.add({
+    //   targets: this.m_player,
+    //   x: targetX,
+    //   y: targetY,
+    //   duration: distance / speed * 1000, // 시간 = 거리 / 속력
+    //   ease: "Linear",
+    //   onComplete: () => {
+    //       this.m_player.play("player_idle", true); // 이동이 끝나면 대기 애니메이션 실행
+    //       this.m_player.m_moving = false;
+    //   }
+    // });
+
+    this.m_player.setVelocity(0, 0); // 기존 이동 멈추기
+
+    let dx = targetX - this.m_player.x;
+    let dy = targetY - this.m_player.y;
+    let distance = Phaser.Math.Distance.Between(this.m_player.x, this.m_player.y, targetX, targetY);
 
     // 이동 방향에 따라 캐릭터 좌우 반전
     if (dx < 0) {
@@ -174,23 +189,27 @@ export default class PlayingScene extends Phaser.Scene
         this.m_player.setFlipX(false); // 오른쪽 이동
     } 
 
-    this.m_player.play("player_run" , true); 
+    const speed = 200;
+    let angle = Math.atan2(dy, dx);
+
+    this.m_player.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
+    
+    this.m_player.play("player_run", true);
     this.m_player.m_moving = true;
 
-    // Phaser 3의 tweens는 오브젝트의 속성을 일정한 속도로 변경해주는 애니메이션 시스템이야.
-    // 크기, 투명도, 위치 등 여러가지 조절 가능
-    this.tweens.add({
-      targets: this.m_player,
-      x: targetX,
-      y: targetY,
-      duration: distance / speed * 1000, // 시간 = 거리 / 속력
-      ease: "Linear",
-      onComplete: () => {
-          this.m_player.play("player_idle", true); // 이동이 끝나면 대기 애니메이션 실행
-          this.m_player.m_moving = false;
-      }
+    // 충돌 감지 후 멈추기
+    this.physics.add.collider(this.m_player, this.collisionLayer, () => {
+        this.m_player.setVelocity(0, 0);
+        this.m_player.play("player_idle", true);
+        this.m_player.m_moving = false;
     });
-  
+
+  }
+
+  stopPlayer() {
+    this.m_player.setVelocity(0, 0);
+    this.m_player.play("player_idle", true);
+    this.m_player.m_moving = false;
   }
 
   attackPlayerManager() {
@@ -199,6 +218,7 @@ export default class PlayingScene extends Phaser.Scene
     // ["D", "F", "Q"]  
     Object.keys(this.m_attackKeys).forEach(key => {
       if(Phaser.Input.Keyboard.JustDown(this.m_attackKeys[key]) && !this.m_player.m_attacking) {
+        this.stopPlayer();
         this.m_player.m_attacking = true;
         this.m_player.m_moving = false;
 

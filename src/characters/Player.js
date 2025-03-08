@@ -13,6 +13,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         scene.add.existing(this);
         scene.physics.add.existing(this);
 
+
+
         // ANIMATION CONFIGURATION
         this.animationHitboxConfig = {
             player_idle: { width: 25, height: 40, offsetX: (80 / 2) - 15, offsetY: 10 },

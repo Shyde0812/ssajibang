@@ -6,8 +6,8 @@ import PlayingScene from "./scenes/PlayingScene";
 
 const Config = {
     // 게임 화면의 크기와 색을 설정하는 부분입니다.
-    width: 1920,
-    height: 1080,
+    width: 1920, // 1920
+    height: 1080, // 1080
     backgroundColor: 0x000000,
     scale: {
         autoCenter: Phaser.Scale.CENTER_BOTH, //중앙 정렬

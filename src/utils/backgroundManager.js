@@ -1,5 +1,6 @@
 import Config from "../Config";
 
+import { mapConfig } from '../Config/mapConfig';
 /**
  * scene의 배경화면을 설정하는 함수
  * @param {Phaser.Scene} scene
@@ -18,26 +19,45 @@ export function setBackground(scene, backgroundTexture) {
     ).setOrigin(0, 0);
 }
 
-export function setTilemapBackground(scene, tilemapKey, tilesetName, tilesetKey, backgroundLayerName) {
+export function setTilemapBackground(scene, tilemapKey) {
     // Tiled에서 가져온 tilemap을 생성합니다.
     const map = scene.make.tilemap({ key: tilemapKey });
 
-    // 타일셋을 추가합니다.
-    const tileset = map.addTilesetImage(tilesetName , tilesetKey);
+    // mapConfig에서 현재 맵의 레이어 정보를 가져옵니다.
+    const mapData = mapConfig[tilemapKey];
 
-    // Tiled에서 배경 레이어를 생성합니다.
-    const backgroundLayer = map.createLayer(backgroundLayerName, tileset, 0, 0);
-
-    // 배경 레이어를 저장해 두어 필요할 때 관리할 수 있도록 합니다.
-    scene.m_background = backgroundLayer;
-
-    // 배경 레이어를 맨 뒤로 보냅니다.
-    scene.children.sendToBack(backgroundLayer);
-
+    
     // widthInPixels , heightInPixels = tilemap API 에서 제공하는 속성
-    // 타일의 크기와 타일의 개수를 곱해서 자동으로 계산
     const mapWidth = map.widthInPixels;
     const mapHeight = map.heightInPixels;
 
+
+    // 레이어들을 동적으로 생성
+    mapData.layers.forEach(layer => {
+
+        // 레이어별로 타일셋을 추가
+        const tileset = map.addTilesetImage(layer.tilesetName, layer.tilesetKey);
+        // 레이어를 생성하고 배경으로 설정
+        const backgroundLayer = map.createLayer(layer.name, tileset, 0, 0);
+
+        if (layer.name === mapData.collisionLayer) {
+            // 해당 레이어의 모든 타일에 충돌 설정
+            backgroundLayer.setCollisionByExclusion([-1]); // -1은 빈 타일
+            scene.collisionLayer = backgroundLayer; // 씬에 충돌 레이어 참조 저장
+        }
+
+        // 각 레이어를 scene에 저장하여 관리할 수 있게 설정
+        scene[layer.name] = backgroundLayer;
+
+        // 배경 레이어를 맨 뒤로 보냅니다.
+        scene.children.sendToBack(backgroundLayer);
+
+        // const offsetX = (Config.width - mapWidth) / 2; // ex) (1920 - 1600) / 2 = 160px
+        // const offsetY = (Config.height - mapHeight) / 2;
+
+        // backgroundLayer.setPosition(offsetX, offsetY); // 배경 레이어를 중앙으로 이동
+    });
+
     scene.cameras.main.setBounds(0, 0, mapWidth, mapHeight); // 카메라의 이동 범위 제한
+    scene.map = map;
 }

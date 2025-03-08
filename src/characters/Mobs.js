@@ -19,7 +19,7 @@ export default class Mob extends Phaser.Physics.Arcade.Sprite {
         this.m_dropRate = dropRate;
         this.m_isDead = false;
 
-        this.m_BosshpBar = new BossHpBar(scene , this.m_hp);
+        this.m_BosshpBar = new BossHpBar(scene , this.m_hp, "AshBrown");
 
 
         if (texture === "mob1") {
