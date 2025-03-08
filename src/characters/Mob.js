@@ -3,7 +3,7 @@ import { mobConfig } from "../Config/mobConfig";
 
 import Explosion from "../effects/Explosion";
 
-// import BossHpBar from "../ui/BossHpBar";
+ import BossHpBar from "../ui/BossHpBar";
 // import { removeAttack } from '../utils/attackManager';
 
 
@@ -27,6 +27,7 @@ export default class Mob extends Phaser.Physics.Arcade.Sprite {
         this.initPhysics();
         this.initAnimation();
         this.initMovement();
+        this.initHpBar(scene);
 
         scene.events.on("update", (time, delta) => 
             this.update(time, delta)
@@ -39,6 +40,11 @@ export default class Mob extends Phaser.Physics.Arcade.Sprite {
         this.m_hp = this.config.hp || 100;
         this.m_isDead = false;
         this.m_canBeAttacked = true;
+
+        this.m_moveDelay = this.config.moveDelay || 100;
+
+        this.m_hpBarVisible = false;
+        this.m_hpBar = this.config.hpBar || "normal";
     }
 
     initPhysics() {
@@ -54,13 +60,27 @@ export default class Mob extends Phaser.Physics.Arcade.Sprite {
     }
 
     initMovement() {
+        this.canMove = true;
+
         this.scene.time.addEvent({
-            delay: 100,
+            delay: this.m_moveDelay,
             callback: () => {
-                this.scene.physics.moveToObject(this, this.scene.m_player, this.m_speed);
+                if (this.canMove) { // canMove가 true일 때만 이동
+                    this.scene.physics.moveToObject(this, this.scene.m_player, this.m_speed);
+                } else {
+                    if (this.body instanceof Phaser.Physics.Arcade.Body) {
+                        this.body.setVelocity(0); // 안전한 방식
+                    }
+                }
             },
             loop: true,
         });
+    }
+
+    initHpBar(scene) {
+        if (this.m_hpBar === "boss") {
+            this.m_BosshpBar = new BossHpBar(scene , this.m_hp, "AshBrown");
+        }
     }
 
     update() {
@@ -80,22 +100,14 @@ export default class Mob extends Phaser.Physics.Arcade.Sprite {
 
     // mob이 static attack에 맞을 경우 실행되는 함수
     hitByStatic(damage, duration) {
-        
         if (!this.m_canBeAttacked) return;
 
+        this.m_hpBarVisible = true;
         this.scene.m_hitMobSound.play();
 
         this.m_hp -= damage;
-        //this.m_BosshpBar.decrease(damage);
 
-        // DEBUG
-        //console.log("hit");
-        //console.log(this.m_hp);
-        //console.log(weapon);
-
-        //weapon.destroy();
-        //removeAttack(this.scene, weapon);
-
+        this.m_BosshpBar.decrease(damage);
         this.displayHit(duration);
         this.getCoolDown(duration);
 
@@ -130,6 +142,10 @@ export default class Mob extends Phaser.Physics.Arcade.Sprite {
 
         new Explosion(this.scene, this.x, this.y);
         this.scene.m_explosionSound.play();
+
+        this.scene.time.delayedCall(100, () => {
+            this.destroy();
+        });
 
         // 추적 이벤트 제거
         this.scene.time.removeEvent(this.m_events);
