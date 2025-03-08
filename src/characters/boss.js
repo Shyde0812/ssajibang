@@ -7,7 +7,7 @@ import Explosion from "../effects/Explosion";
 // import { removeAttack } from '../utils/attackManager';
 
 
-export default class Mob extends Phaser.Physics.Arcade.Sprite {
+export default class boss extends Phaser.Physics.Arcade.Sprite {
     
     constructor(scene, x, y, name) {
 
@@ -80,12 +80,15 @@ export default class Mob extends Phaser.Physics.Arcade.Sprite {
     initHpBar(scene) {
         if (this.m_hpBar === "boss") {
             this.m_BosshpBar = new BossHpBar(scene , this.m_hp, "AshBrown");
+
         }
     }
 
     update() {
         // ?
-        if (!this.body) return;
+        if (this.m_isDead) return;
+
+        console.log("run");
 
         // 바라 보는 방향이다.
         if (this.x < this.scene.m_player.x) this.flipX = true;
@@ -95,6 +98,14 @@ export default class Mob extends Phaser.Physics.Arcade.Sprite {
         if ( this.m_hp <= 0 && !this.m_isDead) {
             this.die();
         }
+
+        // 보스 체력바
+        if(this.m_hpBarVisible) {
+            this.m_BosshpBar.setVisible(true);
+        } else {
+            this.m_BosshpBar.setVisible(false);
+        }
+
         
     }
 
@@ -140,6 +151,9 @@ export default class Mob extends Phaser.Physics.Arcade.Sprite {
     die() {
         this.m_isDead = true;
 
+        this.m_hpBarVisible = false;
+        this.m_BosshpBar.setVisible(false);
+
         new Explosion(this.scene, this.x, this.y);
         this.scene.m_explosionSound.play();
 
@@ -148,7 +162,9 @@ export default class Mob extends Phaser.Physics.Arcade.Sprite {
         });
 
         // 추적 이벤트 제거
-        this.scene.time.removeEvent(this.m_events);
+        // 💥 모든 타이머 이벤트를 삭제하여 더 이상 this.scene을 참조하지 않게 함
+        this.scene.time.removeAllEvents();
+
 
     }
 
