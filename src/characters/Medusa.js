@@ -6,12 +6,13 @@ export default class Medusa extends mob {
     constructor(scene, x, y , name) {
         super(scene, x, y, name);
 
-        this.specialAttackTimer = scene.time.addEvent({
-            delay: 3 * 1000, // 10초마다 실행
-            callback: this.useRandomSkill,
-            callbackScope: this,
-            loop: true
-        });
+        this.useRandomSkill();
+        // this.specialAttackTimer = scene.time.addEvent({
+        //     delay: 3 * 1000, // 10초마다 실행
+        //     callback: this.useRandomSkill,
+        //     callbackScope: this,
+        //     loop: true
+        // });
 
         this.addEvent(this.specialAttackTimer);
     }

@@ -84,11 +84,11 @@ export default class PlayingScene extends Phaser.Scene
     // Mob
     
     this.m_mobs = this.physics.add.group();
+    this.m_mobAttackStatic = this.add.group();
+    this.m_mobAttackDynamic = this.add.group();
+
     MobFactory.createMob(this, "medusa", this.map.Width / 2, 256);
     this.m_mobEvents = [];
-
-    // scene, repeatGap, mobTexture, mobAnim, mobHp, mobDropRate
-    //addMobEvent(this, 1000, "mob1", "mob1_anim", 100 , 0.9);
 
     // ATTACK
     this.m_weaponDynamic = this.add.group();
@@ -106,7 +106,7 @@ export default class PlayingScene extends Phaser.Scene
     //   () => this.m_player.hitByMob(10),
     //   null,
     //   this
-    // );
+    // ); 
 
     // mob이 static 공격에 부딪혓을 경우 mob에 해당 공격의 데미지만큼 데미지를 줍니다.
     // (Mob.js에서 hitByStatic 함수 확인)

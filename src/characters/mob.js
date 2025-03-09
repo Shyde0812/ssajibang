@@ -24,6 +24,8 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
 
         // 모든 이벤트를 관리하는 배열
         this.events = [];
+        // 몬스터 공격 히트박스를 담을 그룹 생성
+        this.attackHitboxes = this.scene.physics.add.group();
 
         this.config = config
         this.initProperties();
@@ -99,7 +101,7 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
             
 
             this.once("animationcomplete", () => { // 보스가 부활모션 없어서 지금은 못쓸듯
-                //this.m_canMove = true;
+                this.m_canMove = true;
                 //this.initMovement();
             });
         }
@@ -137,10 +139,10 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
             return;
         }
 
-
         // 바라 보는 방향이다.
-        if (this.x < this.scene.m_player.x) this.flipX = true;
-        else this.flipX = false;
+        if (this.x < this.scene.m_player.x && this.m_canMove) this.flipX = true;
+        else if (this.x > this.scene.m_player.x && this.m_canMove) this.flipX = false;
+        else return;
 
         this.distance = Phaser.Math.Distance.Between(
             this.x, 
@@ -182,17 +184,11 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
     }
 
     controlMovement(distance) {
-        
         if (distance < this.m_stopDistance) {
             this.m_canMove = false;
-            this.attack();
         } else {
             this.m_canMove = true;
         }
-    }
-
-    controlAutoattack() {
-        
     }
 
     controlhpBarVisible(distance) {
@@ -204,7 +200,6 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
         else if (!this.m_hpBarVisible && distance <= this.m_hpBarRange) {
             this.m_hpBarVisible = true;
         }
-
     }
 
     // mob이 static attack에 맞을 경우 실행되는 함수
