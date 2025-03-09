@@ -15,8 +15,24 @@ export const mobConfig = {
             {key: 'boss_idle' }
         ],
         Hp : 100,
-        moveDelay : 1000,
-        hpBar : "boss",
+        hpBarRange : 1000, // 보스바가 사라지는 거리
 
+        moveDelay : 1000,
+        stopDistance : 500,
+
+    },
+
+    skeleton : {
+        sprite : "skeleton_idle",
+        type : "mob",
+        bodySize: [150 , 150],
+        scale: 3,
+        speed: 50,
+        animation : [
+            {key: 'skeleton_idle' }
+        ],
+        Hp : 100,
+
+        stopDistance : 300,
     }
 }

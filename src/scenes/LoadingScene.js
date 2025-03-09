@@ -30,6 +30,12 @@ import pl_AA3Img from "../assets/spritesheets/player/pl_AA3.png";
 // ..boss
 import boss_idleImg from "../assets/spritesheets/boss/boss_idle.png";
 
+// ..mobs
+import skeleton_idleImg from "../assets/spritesheets/mobs/skeleton_idle.png";
+import skeleton_attackImg from "../assets/spritesheets/mobs/skeleton_attack.png";
+import skeleton_walkImg from "../assets/spritesheets/mobs/skeleton_walk.png";
+
+
 // ..effect
 import EFF_AA1Img from "../assets/spritesheets/effect/EFF_AA1.png";
 import EFF_AA2Img from "../assets/spritesheets/effect/EFF_AA2.png";
@@ -151,18 +157,35 @@ export default class LoadingScene extends Phaser.Scene {
             frameHeight: 100,
         });
 
+        this.load.spritesheet("explosion", explosionImg, {
+            frameWidth: 32,
+            frameHeight: 32,
+        });
+        
+
         // MOB
+        // ..boss
         this.load.spritesheet("boss_idle", boss_idleImg, {
             frameWidth: 100,
             frameHeight: 150,
         });
 
-
-        this.load.spritesheet("explosion", explosionImg, {
-            frameWidth: 32,
-            frameHeight: 32,
+        // ..mobs
+        this.load.spritesheet("skeleton_idle", skeleton_idleImg, {
+            frameWidth: 150,
+            frameHeight: 150,
         });
 
+        this.load.spritesheet("skeleton_attack", skeleton_attackImg, {
+            frameWidth: 150,
+            frameHeight: 150,
+        });
+
+        this.load.spritesheet("skeleton_walk", skeleton_walkImg, {
+            frameWidth: 150,
+            frameHeight: 150,
+        });
+        
         
 
         // AUDIOS
@@ -264,6 +287,27 @@ export default class LoadingScene extends Phaser.Scene {
 
 
         // ..MOB
+        this.anims.create({
+            key: "skeleton_idle",
+            frames: this.anims.generateFrameNumbers("skeleton_idle"),
+            frameRate: 4,
+            repeat: -1,
+        });
+
+        this.anims.create({
+            key: "skeleton_attack",
+            frames: this.anims.generateFrameNumbers("skeleton_attack"),
+            frameRate: 4,
+            repeat: 0,
+        });
+
+        this.anims.create({
+            key: "skeleton_walk",
+            frames: this.anims.generateFrameNumbers("skeleton_walk"),
+            frameRate: 4,
+            repeat: -1,
+        });
+
 
         // ..EFFECT
         this.anims.create({

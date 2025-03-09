@@ -1,14 +1,17 @@
-import boss from "./boss";
+import mob from "./mob";
 
+import mobFactory from '../utils/mobFactory';
 
-
-export default class Medusa extends boss {
+export default class Medusa extends mob {
     constructor(scene, x, y , name) {
         super(scene, x, y, name);
 
-        this.stopDistance = 300;
-        this.detectRange = 1000; // 보스바가 사라지는 거리
-
+        this.specialAttackTimer = scene.time.addEvent({
+            delay: 10 * 1000, // 10초마다 실행
+            callback: this.specialAttack,
+            callbackScope: this,
+            loop: true
+        });
     }
 
     update() {
@@ -16,44 +19,24 @@ export default class Medusa extends boss {
 
         super.update();
 
-        const distance = Phaser.Math.Distance.Between(
-            this.x, 
-            this.y, 
-            this.scene.m_player.x,
-            this.scene.m_player.y
-        );
-
-        this.controlMovement(distance);
-        this.controlhpBarVisible(distance);
         //this.specialAttack();
     }
 
-    controlMovement(distance) {
+
+    useRandomSkill() {
+        const skills = [this.summonSkeletons]; // 앞으로 추가할 다른 스킬도 여기에 넣으면 됨
+        const randomSkill = Phaser.Math.RND.pick(skills);
+        randomSkill.call(this);
+    }
+
+    summonSkeletons() {
+        console.log("Medusa summons two Skeletons!");
         
-        if (distance < this.stopDistance) {
-            this.canMove = false;
-        } else {
-            this.canMove = true;
-        }
-    }
+        const leftX = this.x - 50;
+        const rightX = this.x + 50;
+        const y = this.y;
 
-    controlhpBarVisible(distance) {
-        // 일정 거리 이상이면 보스바 숨김
-        if (this.m_hpBarVisible && distance > this.detectRange) {
-            this.m_hpBarVisible = false;
-        }
-        // 일정 거리 이하면 보스바 다시 표시
-        else if (!this.m_hpBarVisible && distance <= this.detectRange) {
-            this.m_hpBarVisible = true;
-        }
-
-    }
-
-
-
-    specialAttack() {
-        if (Phaser.Math.Between(1, 100) > 98) {
-            console.log("Medusa uses petrify!");
-        }
+        mobFactory.createMob(this.scene, "skeleton", leftX, y);
+        mobFactory.createMob(this.scene, "skeleton", rightX, y);
     }
 }
