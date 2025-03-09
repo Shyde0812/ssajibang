@@ -24,8 +24,6 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
 
         // 모든 이벤트를 관리하는 배열
         this.events = [];
-        // 몬스터 공격 히트박스를 담을 그룹 생성
-        this.attackHitboxes = this.scene.physics.add.group();
 
         this.config = config
         this.initProperties();
@@ -35,7 +33,7 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
         this.initHpBar(scene);
 
         scene.events.on("update", (time, delta) => 
-            this.update(time, delta)
+            this.update(time, delta),
         );
     }
 
@@ -138,11 +136,12 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
         if (this.m_isDead || !this.body) {
             return;
         }
-
+        
         // 바라 보는 방향이다.
-        if (this.x < this.scene.m_player.x && this.m_canMove) this.flipX = true;
-        else if (this.x > this.scene.m_player.x && this.m_canMove) this.flipX = false;
-        else return;
+        if (this.m_canMove) {
+            if (this.x < this.scene.m_player.x) this.flipX = true;
+            else this.flipX = false;
+        }
 
         this.distance = Phaser.Math.Distance.Between(
             this.x, 
@@ -245,7 +244,7 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
 
     die() {
         this.m_isDead = true;
-
+        this.death();
 
         new Explosion(this.scene, this.x, this.y);
         this.scene.m_explosionSound.play();
@@ -254,7 +253,6 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
         if (this.events.length > 0) {
             this.events.forEach(event => {
                 event.remove();  // 이벤트 제거
-                console.log("Event removed!");
             });
             this.events = [];  // 배열 비우기
         }
@@ -265,15 +263,7 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
                 hitbox.destroy(); // hitbox를 삭제
             });
         }
-        
-        this.scene.time.delayedCall(100, () => {
-            this.scene.m_mobs.remove(this);
-
-            //console.log("m_mobs children entries:", this.scene.m_mobs.children.entries);
-
-            this.destroy();
-        });
-
+    
 
         // 💡 update 이벤트 제거
         this.scene.events.off("update", this.update, this);

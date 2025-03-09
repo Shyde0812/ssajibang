@@ -24,7 +24,8 @@ export default class skeleton extends mob {
             ),
             false
         );
-        this.hitbox.setVisible(false);  // 기본적으로 Hitbox는 보이지 않도록 설정
+        this.hitbox.setActive(false);
+        this.hitbox.setVisible(false);
 
     }
 
@@ -45,21 +46,48 @@ export default class skeleton extends mob {
     }
 
     attack() {
+        // 기존 이벤트 리스너 제거 (중복 방지)
+        this.off('animationcomplete-skeleton_attack');
+        
+        // 애니메이션 시작 전에 히트박스 활성화
+        this.setHitboxActive(true);
+        
+        // 애니메이션 재생
         this.play("skeleton_attack", true);
-        this.setHitboxActive(true);  // 공격 시 Hitbox 활성화
-
-        this.once('animationcomplete-skeleton_attack', () => {
-            this.setHitboxActive(false); // 애니메이션이 끝나면 Hitbox 비활성화
-            this.m_canMove = true;  // 애니메이션이 끝난 후 이동 가능
-        });
+        
+        // 애니메이션 완료 이벤트 설정
+        this.once('animationcomplete', function(animation) {
+            if (animation.key === 'skeleton_attack') {
+                this.setHitboxActive(false); // 히트박스 비활성화
+                this.m_canMove = true;  // 이동 가능 상태로 변경
+            }
+        }, this);  // this 컨텍스트 바인딩 추가
     }
 
     revive() {
         this.play("skeleton_revive", true);
+
+        
     }
 
     death() {
+        // 히트박스가 활성화된 상태라면 비활성화
+        this.setHitboxActive(false);
+
+        if (this.body instanceof Phaser.Physics.Arcade.Body) {
+            this.body.setVelocity(0); // 안전한 방식
+        }
         this.play("skeleton_death", true);
+
+        this.once('animationcomplete', function(animation) {
+            if (animation.key === 'skeleton_death') {
+                this.scene.m_mobs.remove(this);
+
+            //console.log("m_mobs children entries:", this.scene.m_mobs.children.entries);
+            
+            this.destroy();
+            }
+        }, this);  // this 컨텍스트 바인딩 추가
     }
     // Override
     controlMovement(distance) {
@@ -72,22 +100,34 @@ export default class skeleton extends mob {
 
     setHitboxActive(active) {
         if (active) {
-            this.scene.m_mobAttackStatic.add(this.hitbox);
-            console.log(this.scene.m_mobAttackStatic.children.entries);
             // Hitbox 크기 및 위치 설정
             this.hitbox.setSize(100, 50);
             if(this.flipX) {
-                this.hitbox.setPosition(this.x + 50, this.y); // 예시: 공격 위치에 맞게 설정
+                this.hitbox.setPosition(this.x + 50, this.y);
             }
             else {
-                this.hitbox.setPosition(this.x - 50, this.y); // 예시: 공격 위치에 맞게 설정
+                this.hitbox.setPosition(this.x - 50, this.y);
             }
-
+            
+            // 히트박스 활성화
             this.hitbox.setActive(true);
             this.hitbox.setVisible(true);
+            
+            // 충돌 그룹에 추가
+            if (!this.scene.m_mobAttackStatic.contains(this.hitbox)) {
+                this.scene.m_mobAttackStatic.add(this.hitbox);
+            }
+
         } else {
+            // 히트박스 비활성화
             this.hitbox.setActive(false);
             this.hitbox.setVisible(false);
+            
+            // 그룹에서 제거
+            this.scene.m_mobAttackStatic.remove(this.hitbox);
+            
+            // 그룹에 히트박스가 있는지 확인
+            //console.log("히트박스가 그룹에 여전히 있는지:", this.scene.m_mobAttackStatic.contains(this.hitbox));
         }
     }
 

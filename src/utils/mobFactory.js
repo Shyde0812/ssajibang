@@ -20,11 +20,9 @@ export default class MobFactory {
         // 생성된 몹을 scene의 m_mobs 그룹에 자동으로 추가
         if (addToGroup && mob && scene.m_mobs) {
             scene.m_mobs.add(mob);
-            console.log(`Added ${name} to m_mobs group`);
         }
 
-        console.log("m_mobs children entries:", scene.m_mobs.children.entries);
-        //console.log("fac" , scene.m_mobs);
+        //console.log("m_mobs children entries:", scene.m_mobs.children.entries);
 
         return mob;
     }

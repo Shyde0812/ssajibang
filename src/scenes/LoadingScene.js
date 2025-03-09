@@ -170,6 +170,7 @@ export default class LoadingScene extends Phaser.Scene {
             frameWidth: 100,
             frameHeight: 150,
         });
+        
 
         // ..mobs
         this.load.spritesheet("skeleton_idle", skeleton_idleImg, {
@@ -290,6 +291,16 @@ export default class LoadingScene extends Phaser.Scene {
             frameRate: 2,
             repeat: -1,
         });
+
+
+        this.anims.create({
+            key: "boss_death",
+            frames: this.anims.generateFrameNumbers("boss_idle"),
+            frameRate: 2,
+            repeat: 0,
+        });
+
+        
 
 
         // ..MOB

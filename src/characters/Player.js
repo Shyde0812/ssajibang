@@ -91,7 +91,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     }
 
-    hitByMob(damage) {
+    hitByStatic(damage) {
         if (!this.m_canBeAttacked) return;
 
         //this.scene.m_hurtSound.play();

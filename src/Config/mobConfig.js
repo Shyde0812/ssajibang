@@ -17,6 +17,7 @@ export const mobConfig = {
         Hp : 100,
         hpBarRange : 1000, // 보스바가 사라지는 거리
 
+        canMove : true,
         moveDelay : 1000,
         stopDistance : 500,
 

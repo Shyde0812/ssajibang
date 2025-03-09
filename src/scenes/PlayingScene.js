@@ -100,13 +100,13 @@ export default class PlayingScene extends Phaser.Scene
 
     // Player와 mob이 부딪혔을 경우 player에게 데미지 10을 줍니다? 이건 몬스터마다 다르게 만들어야할듯
     // ( player.js 에서 hitByMob 함수 확인 )
-    // this.physics.add.overlap(
-    //   this.m_player,
-    //   this.m_mobs,
-    //   () => this.m_player.hitByMob(10),
-    //   null,
-    //   this
-    // ); 
+    this.physics.add.overlap(
+      this.m_mobAttackStatic,
+      this.m_player,
+      () => this.m_player.hitByStatic(10),
+      null,
+      this
+    );
 
     // mob이 static 공격에 부딪혓을 경우 mob에 해당 공격의 데미지만큼 데미지를 줍니다.
     // (Mob.js에서 hitByStatic 함수 확인)
