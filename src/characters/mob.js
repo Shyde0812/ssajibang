@@ -44,6 +44,7 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
         // Set
         this.m_isDead = false;
         this.m_canBeAttacked = true;
+        this.m_canMove = this.config.canMove;
 
         // Move
         this.m_moveDelay = this.config.moveDelay || 100;
@@ -86,18 +87,23 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
 
     initAnimation() {
         if (this.config.animation) {
-            this.play(this.config.animation[0].key);
+            this.play(this.config.animation[0].key); // skeleton_revive 애니메이션 실행
+            
+
+            this.once("animationcomplete", () => { // 보스가 부활모션 없어서 지금은 못쓸듯
+                //this.m_canMove = true;
+                //this.initMovement();
+            });
         }
     }
 
     initMovement() {
-        this.canMove = true;
-
         this.scene.time.addEvent({
             delay: this.m_moveDelay,
             callback: () => {
-                if (this.canMove) { // canMove가 true일 때만 이동
+                if (this.m_canMove && this.body) { // m_canMove가 true일 때만 이동
                     this.scene.physics.moveToObject(this, this.scene.m_player, this.m_speed);
+                    this.walk();
                 } else {
                     if (this.body instanceof Phaser.Physics.Arcade.Body) {
                         this.body.setVelocity(0); // 안전한 방식
@@ -111,7 +117,6 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
     initHpBar(scene) {
         if (this.m_type === "boss") {
             this.m_hpBar = new BossHpBar(scene , this.m_hp, "AshBrown");
-
         }
     }
 
@@ -148,16 +153,17 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
         }
 
         // BossHpBar
-        if(this.m_hpBarVisible) {
+        if(this.m_hpBarVisible && this.m_hpBar) {
             this.m_hpBar.setVisible(true);
             //console.log("visible run");
-        } else {
+        }
+        else if(!this.m_hpBarVisible && this.m_hpBar) {
             this.m_hpBar.setVisible(false);
         }
 
         // HP 가 0 이하 이고, 죽은 적이 없으면 죽습니다.
         if ( this.m_hp <= 0 && !this.m_isDead) {
-            this.m_hpBar.setVisible(false);
+            //this.m_hpBar.setVisible(false);
             this.die();
         }
 
@@ -167,9 +173,10 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
     controlMovement(distance) {
         
         if (distance < this.m_stopDistance) {
-            this.canMove = false;
+            this.m_canMove = false;
+            this.idle();
         } else {
-            this.canMove = true;
+            this.m_canMove = true;
         }
     }
 
@@ -194,7 +201,9 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
 
         this.m_hp -= damage;
 
-        this.m_hpBar.decrease(damage);
+        if(this.m_hpBar) {
+            this.m_hpBar.decrease(damage);
+        }
         this.displayHit(duration);
         this.getCoolDown(duration);
 
@@ -227,15 +236,27 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
     die() {
         this.m_isDead = true;
 
-        // 추적 이벤트 제거
-        // 💥 모든 타이머 이벤트를 삭제하여 더 이상 this.scene을 참조하지 않게 함
-        this.scene.time.removeAllEvents();
 
         new Explosion(this.scene, this.x, this.y);
         this.scene.m_explosionSound.play();
 
+         // hitboxes 삭제
+        if (this.hitboxes) {
+            this.hitboxes.forEach(hitbox => {
+                hitbox.destroy(); // hitbox를 삭제
+            });
+        }
+
+        // 타이머 이벤트 저장 및 취소
+        if (this.timerEvent) {
+            this.timerEvent.remove();
+        }
         
         this.scene.time.delayedCall(100, () => {
+            this.scene.m_mobs.remove(this);
+
+            console.log("m_mobs children entries:", this.scene.m_mobs.children.entries);
+
             this.destroy();
         });
 
@@ -243,6 +264,9 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
         // 💡 update 이벤트 제거
         //this.scene.events.off("update", this.update, this);
 
+        // 추적 이벤트 제거
+        // 💥 모든 타이머 이벤트를 삭제하여 더 이상 this.scene을 참조하지 않게 함
+        // this.scene.time.removeAllEvents();
 
     }
 

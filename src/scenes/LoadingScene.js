@@ -34,6 +34,7 @@ import boss_idleImg from "../assets/spritesheets/boss/boss_idle.png";
 import skeleton_idleImg from "../assets/spritesheets/mobs/skeleton_idle.png";
 import skeleton_attackImg from "../assets/spritesheets/mobs/skeleton_attack.png";
 import skeleton_walkImg from "../assets/spritesheets/mobs/skeleton_walk.png";
+import skeleton_deathImg from "../assets/spritesheets/mobs/skeleton_death.png";
 
 
 // ..effect
@@ -185,6 +186,11 @@ export default class LoadingScene extends Phaser.Scene {
             frameWidth: 150,
             frameHeight: 150,
         });
+
+        this.load.spritesheet("skeleton_death", skeleton_deathImg, {
+            frameWidth: 150,
+            frameHeight: 150,
+        });
         
         
 
@@ -306,6 +312,22 @@ export default class LoadingScene extends Phaser.Scene {
             frames: this.anims.generateFrameNumbers("skeleton_walk"),
             frameRate: 4,
             repeat: -1,
+        });
+
+        this.anims.create({
+            key: "skeleton_revive",
+            frames: this.anims.generateFrameNumbers("skeleton_death" , 
+                { start: 0, end: 3 }).reverse(),
+            frameRate: 4,
+
+            repeat: 0,
+        });
+
+        this.anims.create({
+            key: "skeleton_death",
+            frames: this.anims.generateFrameNumbers("skeleton_death"),
+            frameRate: 4,
+            repeat: 0,
         });
 
 

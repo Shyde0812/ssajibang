@@ -25,14 +25,19 @@ export const mobConfig = {
     skeleton : {
         sprite : "skeleton_idle",
         type : "mob",
-        bodySize: [150 , 150],
-        scale: 3,
-        speed: 50,
+        bodySize: [40 , 70],
+        scale: 2.3,
+        speed: 100,
         animation : [
-            {key: 'skeleton_idle' }
+            {key: 'skeleton_revive' }, // 초기 애니메이션
+            {key: 'skeleton_idle' },
+            {key: 'skeleton_attack' },
+            {key: 'skeleton_walk' },
+            {key: 'skeleton_death'},
         ],
         Hp : 100,
 
-        stopDistance : 300,
+        canMove: false, // 부활모션 있는 경우
+        stopDistance : 100,
     }
 }

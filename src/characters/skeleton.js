@@ -12,9 +12,12 @@ export default class skeleton extends mob {
         if (this.m_isDead) return;
     
         super.update();
-    
         
         //this.specialAttack();
+    }
+
+    idle() {
+        this.play("skeleton_idle", true);
     }
 
     walk() {
@@ -27,6 +30,10 @@ export default class skeleton extends mob {
 
     revive() {
         this.play("skeleton_revive", true);
+    }
+
+    death() {
+        this.play("skeleton_death", true);
     }
 }
 

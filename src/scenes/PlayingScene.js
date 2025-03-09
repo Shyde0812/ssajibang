@@ -84,8 +84,7 @@ export default class PlayingScene extends Phaser.Scene
     // Mob
     
     this.m_mobs = this.physics.add.group();
-    const medusa = MobFactory.createMob(this, "medusa", this.map.Width / 2, 256);
-    if (medusa) this.m_mobs.add(medusa);
+    MobFactory.createMob(this, "medusa", this.map.Width / 2, 256);
     this.m_mobEvents = [];
 
     // scene, repeatGap, mobTexture, mobAnim, mobHp, mobDropRate
