@@ -22,6 +22,9 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
         scene.add.existing(this);
         scene.physics.add.existing(this);
 
+        // 모든 이벤트를 관리하는 배열
+        this.events = [];
+
         this.config = config
         this.initProperties();
         this.initPhysics();
@@ -32,6 +35,11 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
         scene.events.on("update", (time, delta) => 
             this.update(time, delta)
         );
+    }
+
+    // 다른 이벤트가 있을 경우 이곳에 추가하면 됩니다.
+    addEvent(event) {
+        this.events.push(event);
     }
 
     initProperties() {
@@ -98,7 +106,7 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
     }
 
     initMovement() {
-        this.scene.time.addEvent({
+        this.moveTimer = this.scene.time.addEvent({
             delay: this.m_moveDelay,
             callback: () => {
                 if (this.m_canMove && this.body) { // m_canMove가 true일 때만 이동
@@ -112,6 +120,9 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
             },
             loop: true,
         });
+
+        // 이벤트 배열에 추가
+        this.events.push(this.moveTimer);
     }
 
     initHpBar(scene) {
@@ -174,10 +185,14 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
         
         if (distance < this.m_stopDistance) {
             this.m_canMove = false;
-            this.idle();
+            this.attack();
         } else {
             this.m_canMove = true;
         }
+    }
+
+    controlAutoattack() {
+        
     }
 
     controlhpBarVisible(distance) {
@@ -240,33 +255,37 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
         new Explosion(this.scene, this.x, this.y);
         this.scene.m_explosionSound.play();
 
-         // hitboxes 삭제
+        // 모든 타이머와 이벤트를 제거
+        if (this.events.length > 0) {
+            this.events.forEach(event => {
+                event.remove();  // 이벤트 제거
+                console.log("Event removed!");
+            });
+            this.events = [];  // 배열 비우기
+        }
+
+        // hitboxes 삭제
         if (this.hitboxes) {
             this.hitboxes.forEach(hitbox => {
                 hitbox.destroy(); // hitbox를 삭제
             });
         }
-
-        // 타이머 이벤트 저장 및 취소
-        if (this.timerEvent) {
-            this.timerEvent.remove();
-        }
         
         this.scene.time.delayedCall(100, () => {
             this.scene.m_mobs.remove(this);
 
-            console.log("m_mobs children entries:", this.scene.m_mobs.children.entries);
+            //console.log("m_mobs children entries:", this.scene.m_mobs.children.entries);
 
             this.destroy();
         });
 
 
         // 💡 update 이벤트 제거
-        //this.scene.events.off("update", this.update, this);
+        this.scene.events.off("update", this.update, this);
 
         // 추적 이벤트 제거
         // 💥 모든 타이머 이벤트를 삭제하여 더 이상 this.scene을 참조하지 않게 함
-        // this.scene.time.removeAllEvents();
+        //this.scene.time.removeAllEvents();
 
     }
 

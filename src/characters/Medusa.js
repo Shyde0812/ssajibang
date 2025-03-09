@@ -7,11 +7,13 @@ export default class Medusa extends mob {
         super(scene, x, y, name);
 
         this.specialAttackTimer = scene.time.addEvent({
-            delay: 10 * 1000, // 10초마다 실행
+            delay: 3 * 1000, // 10초마다 실행
             callback: this.useRandomSkill,
             callbackScope: this,
             loop: true
         });
+
+        this.addEvent(this.specialAttackTimer);
     }
 
     update() {
@@ -27,6 +29,10 @@ export default class Medusa extends mob {
     }
 
     walk() {
+        this.play("boss_idle", true);
+    }
+
+    attack() {
         this.play("boss_idle", true);
     }
 
