@@ -7,14 +7,14 @@ export default class Medusa extends mob {
         super(scene, x, y, name);
 
         this.useRandomSkill();
-        // this.skillTimer = scene.time.addEvent({
-        //     delay: 3 * 1000, // 10초마다 실행
-        //     callback: this.useRandomSkill,
-        //     callbackScope: this,
-        //     loop: true
-        // });
+        this.skillTimer = scene.time.addEvent({
+            delay: 3 * 1000, // 10초마다 실행
+            callback: this.useRandomSkill,
+            callbackScope: this,
+            loop: true
+        });
 
-        //this.addEvent(this.skillTimer);
+        this.addEvent(this.skillTimer);
     }
 
     update() {

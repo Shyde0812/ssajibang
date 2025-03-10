@@ -15,15 +15,15 @@ export default class skeleton extends mob {
         };
 
         // zone 생성 후 물리 시스템에 추가
-        this.hitbox = this.scene.physics.add.existing(
-            this.scene.add.zone(
-                this.x + AutoAttackhiboxConfig.offsetX,
-                this.y + AutoAttackhiboxConfig.offsetY,
-                AutoAttackhiboxConfig.width,
-                AutoAttackhiboxConfig.height
-            ),
-            false
+        this.hitbox = this.scene.add.zone(
+            this.x + AutoAttackhiboxConfig.offsetX,
+            this.y + AutoAttackhiboxConfig.offsetY,
+            AutoAttackhiboxConfig.width,
+            AutoAttackhiboxConfig.height
         );
+
+        this.hitbox = this.scene.physics.add.existing(this.hitbox , false);
+
         this.hitbox.setActive(false);
         this.hitbox.setVisible(false);
 
@@ -94,6 +94,7 @@ export default class skeleton extends mob {
         
         if (distance < this.m_stopDistance) {
             this.m_canMove = false;
+            this.m_canFlip = false;
             this.attack();
         }
     }
@@ -103,10 +104,10 @@ export default class skeleton extends mob {
             // Hitbox 크기 및 위치 설정
             this.hitbox.setSize(100, 50);
             if(this.flipX) {
-                this.hitbox.setPosition(this.x + 50, this.y);
+                this.hitbox.setPosition(this.x - 50, this.y);
             }
             else {
-                this.hitbox.setPosition(this.x - 50, this.y);
+                this.hitbox.setPosition(this.x + 50, this.y);
             }
             
             // 히트박스 활성화

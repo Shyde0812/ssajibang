@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 import Config from "../Config";
-import HpBar from "../ui/HpBar";
+//import hpBar from "../ui/hpBar";
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
     
@@ -85,8 +85,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.attackSpeed = 5;
         
         
-        // scene , player , maxHp
-        this.m_hpBar = new HpBar(scene , 100);
+        // scene , player , maxhp
+        //this.m_hpBar = new hpBar(scene , 100);
 
 
     }
@@ -99,12 +99,12 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         // 쿨타임을 갖습니다. (Mob에도 똑같이 있음)
         this.getCooldown();
 
-        this.m_hpBar.decrease(damage);
+        //this.m_hpBar.decrease(damage);
 
-        if(this.m_hpBar.currentHp <= 0) {
-            console.log("die");
-            //loseGame(this.scene);
-        }
+        // if(this.m_hpBar.currentHp <= 0) {
+        //     console.log("die");
+        //     //loseGame(this.scene);
+        // }
 
 
     }

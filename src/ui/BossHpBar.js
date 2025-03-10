@@ -6,21 +6,13 @@ import { clamp } from "../utils/math";
 export default class BossHpBar extends Phaser.GameObjects.Container {
 
     // HP bar를 추가할 scene, 위치를 위한 camera, 최대 HP 값인 maxHp를 파라미터로 전달받습니다.
-    constructor(scene, maxHp, bossName) {
+    constructor(scene, mob) {
         super(scene ,Config.width / 2, Config.height / 8);
 
-        // // HP Bar의 width, height, border를 설정해줍니다.
-        // this.WIDTH = Config.width / 2;
-        // this.HEIGHT = 18
-        // // (m_x, m_y)로 HP bar의 맨 왼쪽 위 지점을 지정합니다.
-        // this.m_x = Config.width / 4;
-        // this.m_y = Config.height / 8
 
-        // 최대 HP, 현재 HP 값을 저장할 멤버 변수를 만들어줍니다.
-        // 처음에는 HP가 최대입니다.
-        this.m_maxHp = maxHp;
-        this.m_currentHp = maxHp;
-        this.m_bossName = bossName;
+        this.mob = mob; // 체력바가 따라갈 몬스터
+
+        this.m_bossName = this.mob.name;
 
         // 체력바 PNG 스프라이트 추가 (BHP_Img 사용) ( 900 , 60 )
         this.hpBarSprite = new BHP(scene, 0, 0); // Container의 (0, 0) 위치에 스프라이트 추가
@@ -47,14 +39,14 @@ export default class BossHpBar extends Phaser.GameObjects.Container {
         this.hpText = scene.add.text(
             0, 
             -barHeight / 4,
-            `${this.m_currentHp} / ${this.m_maxHp}`, 
+            `${this.mob.m_hp} / ${this.mob.m_maxHp}`, 
             { fontSize: '12px', fill: '#fff', fontFamily: "pixelFont" })
             .setOrigin(0.5, 0)
             .setScrollFactor(0)
             .setDepth(22);
 
         // 체력바 배율 텍스트 (예: x2)
-        let scaleFactor = Math.ceil(this.m_currentHp / 100);
+        let scaleFactor = Math.ceil(this.mob.m_hp / 100);
         this.scaleText = scene.add.text(
             barWidth - 20, 
             0, 
@@ -79,13 +71,13 @@ export default class BossHpBar extends Phaser.GameObjects.Container {
 
     // HP를 증가시키고 HP bar를 다시 그리는 메소드입니다.
     increase(amount) {
-        this.m_currentHp = clamp(this.m_currentHp + amount, 0, this.m_maxHp);
+        this.mob.m_hp = clamp(this.mob.m_hp + amount, 0, this.mob.m_maxHp);
         this.draw();
     }
 
     // HP를 감소시키고 HP bar를 다시 그리는 메소드입니다.
     decrease(amount) {
-        this.m_currentHp = clamp(this.m_currentHp - amount, 0, this.m_maxHp);
+        this.mob.m_hp = clamp(this.mob.m_hp - amount, 0, this.mob.m_maxHp);
         this.draw();
     }
 
@@ -108,7 +100,7 @@ export default class BossHpBar extends Phaser.GameObjects.Container {
         // 총 HP가 100, 남은 HP가 n이라면 흰 HP 배경에서
         // 왼쪽에서부터 n%만 빨간색 또는 초록색 사각형을 그려줍니다.
         let hpWidth = Math.floor(
-            (this.m_currentHp / this.m_maxHp) * (barWidth * (7 / 8))
+            (this.mob.m_hp / this.mob.m_maxHp) * (barWidth * (7 / 8))
         );
         //console.log(d);
         this.hpFill.fillStyle(0xcc0e3b); // red
@@ -119,10 +111,10 @@ export default class BossHpBar extends Phaser.GameObjects.Container {
             barHeight / 4 //* this.hpBarSprite.scaleY
         );
 
-        this.hpText.setText(`${this.m_currentHp} / ${this.m_maxHp}`);
+        this.hpText.setText(`${this.mob.m_hp} / ${this.mob.m_maxHp}`);
 
         // 체력바 배율 텍스트 업데이트
-        let scaleFactor = Math.ceil(this.m_currentHp / 100);
+        let scaleFactor = Math.ceil(this.mob.m_hp / 100);
         this.scaleText.setText(`x${scaleFactor}`);
     }   
 }

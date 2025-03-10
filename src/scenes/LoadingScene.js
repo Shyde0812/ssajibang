@@ -326,7 +326,7 @@ export default class LoadingScene extends Phaser.Scene {
         });
 
         this.anims.create({
-            key: "skeleton_revive",
+            key: "skeleton_death",
             frames: this.anims.generateFrameNumbers("skeleton_death" , 
                 { start: 0, end: 3 }).reverse(),
             frameRate: 8,
@@ -335,7 +335,7 @@ export default class LoadingScene extends Phaser.Scene {
         });
 
         this.anims.create({
-            key: "skeleton_death",
+            key: "skeleton_revive",
             frames: this.anims.generateFrameNumbers("skeleton_death"),
             frameRate: 4,
             repeat: 0,

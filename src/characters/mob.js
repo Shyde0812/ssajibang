@@ -3,7 +3,8 @@ import { mobConfig } from "../Config/mobConfig";
 
 import Explosion from "../effects/Explosion";
 
- import BossHpBar from "../ui/BossHpBar";
+import BossHpBar from "../ui/BossHpBar";
+import hpBar from "../ui/hpBar";
 // import { removeAttack } from '../utils/attackManager';
 
 
@@ -45,14 +46,20 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
     initProperties() {
         // Option
         this.scale = this.config.scale || 1;
+        this.name = this.config.naem || "";
         this.m_type = this.config.type || "mob";
         this.m_speed = this.config.speed || 50;
         this.m_hp = this.config.hp || 100;
+        this.m_maxHp = this.config.hp || 100;
+
+        this.m_width = this.config.bodySize[0];
+        this.m_height = this.config.bodySize[1];
 
         // Set
         this.m_isDead = false;
         this.m_canBeAttacked = true;
         this.m_canMove = this.config.canMove;
+        this.m_canFlip = true; // 고개 돌리기
 
         // Move
         this.m_moveDelay = this.config.moveDelay || 100;
@@ -127,7 +134,10 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
 
     initHpBar(scene) {
         if (this.m_type === "boss") {
-            this.m_hpBar = new BossHpBar(scene , this.m_hp, "AshBrown");
+            this.m_hpBar = new BossHpBar(scene , this);
+        }
+        if (this.m_type === "mob") {
+            this.m_hpBar = new hpBar(scene, this);
         }
     }
 
@@ -138,9 +148,9 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
         }
         
         // 바라 보는 방향이다.
-        if (this.m_canMove) {
-            if (this.x < this.scene.m_player.x) this.flipX = true;
-            else this.flipX = false;
+        if (this.m_canFlip) {
+            if (this.x > this.scene.m_player.x) this.flipX = false;
+            else this.flipX = true;
         }
 
         this.distance = Phaser.Math.Distance.Between(
@@ -164,18 +174,22 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
             }
         }
 
-        // BossHpBar
+        // HpBar
         if(this.m_hpBarVisible && this.m_hpBar) {
             this.m_hpBar.setVisible(true);
+            if (this.m_type === "mob") {
+                this.m_hpBar.updatePosition();
+            }
             //console.log("visible run");
         }
         else if(!this.m_hpBarVisible && this.m_hpBar) {
             this.m_hpBar.setVisible(false);
         }
 
+
         // HP 가 0 이하 이고, 죽은 적이 없으면 죽습니다.
         if ( this.m_hp <= 0 && !this.m_isDead) {
-            //this.m_hpBar.setVisible(false);
+            this.m_hpBar.setVisible(false);
             this.die();
         }
 
@@ -203,18 +217,24 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
 
     // mob이 static attack에 맞을 경우 실행되는 함수
     hitByStatic(damage, duration) {
+
+
         if (!this.m_canBeAttacked || this.m_isDead) return;
+
+        this.displayHit(duration);
+        this.getCoolDown(duration);
 
         this.m_hpBarVisible = true;
         this.scene.m_hitMobSound.play();
 
-        this.m_hp -= damage;
+        //this.m_hp -= damage;
 
         if(this.m_hpBar) {
             this.m_hpBar.decrease(damage);
+            console.log("damage :" , damage);
+            console.log("hp :" , this.m_hp);
         }
-        this.displayHit(duration);
-        this.getCoolDown(duration);
+
 
     }
 

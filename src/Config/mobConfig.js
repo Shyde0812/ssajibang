@@ -1,5 +1,6 @@
 export const mobConfig = {
     medusa : {
+        name : "medusa",
         sprite : "boss_idle",
         type : "boss",
         bodySize: [10 , 10],
@@ -14,7 +15,7 @@ export const mobConfig = {
         animation : [
             {key: 'boss_idle' }
         ],
-        Hp : 100,
+        hp : 100,
         hpBarRange : 1000, // 보스바가 사라지는 거리
 
         canMove : true,
@@ -36,7 +37,7 @@ export const mobConfig = {
             {key: 'skeleton_walk' },
             {key: 'skeleton_death'},
         ],
-        Hp : 100,
+        hp : 100,
 
         canMove: false, // 부활모션 있는 경우
         stopDistance : 100,
