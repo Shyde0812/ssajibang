@@ -1,4 +1,4 @@
-import mob from "./mob";
+import mob from "../mob";
 
 
 
@@ -11,7 +11,7 @@ export default class skeleton extends mob {
             offsetX: 50,  // 공격 범위의 X 오프셋
             offsetY: 0,   // 공격 범위의 Y 오프셋
             width: 100,    // Hitbox의 너비
-            height: 50     // Hitbox의 높이
+            height: 100     // Hitbox의 높이
         };
 
         // zone 생성 후 물리 시스템에 추가
@@ -60,6 +60,7 @@ export default class skeleton extends mob {
             if (animation.key === 'skeleton_attack') {
                 this.setHitboxActive(false); // 히트박스 비활성화
                 this.m_canMove = true;  // 이동 가능 상태로 변경
+                this.m_canFlip = true; 
             }
         }, this);  // this 컨텍스트 바인딩 추가
     }
@@ -104,10 +105,10 @@ export default class skeleton extends mob {
             // Hitbox 크기 및 위치 설정
             this.hitbox.setSize(100, 50);
             if(this.flipX) {
-                this.hitbox.setPosition(this.x - 50, this.y);
+                this.hitbox.setPosition(this.x + 50, this.y);
             }
             else {
-                this.hitbox.setPosition(this.x + 50, this.y);
+                this.hitbox.setPosition(this.x - 50, this.y);
             }
             
             // 히트박스 활성화
@@ -123,6 +124,7 @@ export default class skeleton extends mob {
             // 히트박스 비활성화
             this.hitbox.setActive(false);
             this.hitbox.setVisible(false);
+            
             
             // 그룹에서 제거
             this.scene.m_mobAttackStatic.remove(this.hitbox);

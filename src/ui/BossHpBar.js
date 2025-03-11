@@ -13,6 +13,7 @@ export default class BossHpBar extends Phaser.GameObjects.Container {
         this.mob = mob; // 체력바가 따라갈 몬스터
 
         this.m_bossName = this.mob.name;
+        console.log(this.m_bossName);
 
         // 체력바 PNG 스프라이트 추가 (BHP_Img 사용) ( 900 , 60 )
         this.hpBarSprite = new BHP(scene, 0, 0); // Container의 (0, 0) 위치에 스프라이트 추가

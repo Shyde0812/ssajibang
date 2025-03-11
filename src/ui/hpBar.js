@@ -10,9 +10,9 @@ export default class HpBar {
         this.offsetX = -this.mob.m_width / 2;
         this.offsetY = this.mob.m_height / 2;
 
-        // 빨간색 배경 바
+        // 배경 바
         this.healthBarBg = scene.add.graphics();
-        this.healthBarBg.fillStyle(0xff0000);
+        this.healthBarBg.fillStyle(0x200a01); // dark red
         this.healthBarBg.fillRect(
             this.offsetX, 
             this.offsetY, 
@@ -38,7 +38,7 @@ export default class HpBar {
         let healthWidth = (currentHp / this.mob.m_maxHp) * this.barWidth;
 
         this.healthBarFill.clear();
-        this.healthBarFill.fillStyle(0x00ff00);
+        this.healthBarFill.fillStyle(0xa53b28); // red
         this.healthBarFill.fillRect(
             this.offsetX, 
             this.offsetY, 

@@ -46,7 +46,7 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
     initProperties() {
         // Option
         this.scale = this.config.scale || 1;
-        this.name = this.config.naem || "";
+        this.name = this.config.name || "";
         this.m_type = this.config.type || "mob";
         this.m_speed = this.config.speed || 50;
         this.m_hp = this.config.hp || 100;
@@ -231,8 +231,6 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
 
         if(this.m_hpBar) {
             this.m_hpBar.decrease(damage);
-            console.log("damage :" , damage);
-            console.log("hp :" , this.m_hp);
         }
 
 

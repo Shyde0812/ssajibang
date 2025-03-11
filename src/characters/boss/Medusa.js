@@ -1,6 +1,6 @@
-import mob from "./mob";
+import mob from "../mob";
 
-import mobFactory from '../utils/mobFactory';
+import mobFactory from '../../utils/mobFactory';
 
 export default class Medusa extends mob {
     constructor(scene, x, y , name) {

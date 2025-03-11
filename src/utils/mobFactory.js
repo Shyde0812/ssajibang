@@ -1,5 +1,5 @@
-import Medusa from "../characters/Medusa";
-import skeleton from "../characters/skeleton";
+import Medusa from "../characters/boss/Medusa";
+import skeleton from "../characters/mob/skeleton";
 
 export default class MobFactory {
     static createMob(scene, name, x, y , addToGroup = true) {

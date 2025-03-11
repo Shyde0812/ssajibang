@@ -26,7 +26,7 @@ export const mobConfig = {
 
     skeleton : {
         sprite : "skeleton_idle",
-        type : "mob",
+        type : "non",
         bodySize: [40 , 70],
         scale: 2.3,
         speed: 100,
@@ -40,6 +40,6 @@ export const mobConfig = {
         hp : 100,
 
         canMove: false, // 부활모션 있는 경우
-        stopDistance : 100,
+        stopDistance : 150,
     }
 }

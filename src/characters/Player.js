@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 import Config from "../Config";
-//import hpBar from "../ui/hpBar";
+import hpBar from "../ui/hpBar";
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
     
@@ -24,40 +24,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             pl_AA2: { width: 18, height: 50, offsetX: ( 80 / 2 ) - 10 , offsetY: 10 },
         };
 
-        // ✅ 애니메이션 이벤트 리스너를 여기서 등록
-        // ..update에서만 set~~ 해주면 start와 complete때 hitbox 흔들리는 현상 ---> start , complete 추가해서 수정
-        this.on("animationupdate", (anim) => {
-            //console.log("애니메이션 업데이트 실행됨:", anim.key);
-    
-            let config = this.animationHitboxConfig[anim.key];
-            if (config) {
-                this.setBodySize(config.width, config.height);
-                this.setOffset(config.offsetX, config.offsetY);
-                //console.log(config.width, config.height);
-            }
-        });
-    
-        this.on("animationstart", (anim) => {
-            //console.log("애니메이션 시작 실행됨:", anim.key);
-    
-            let config = this.animationHitboxConfig[anim.key];
-            if (config) {
-                this.setBodySize(config.width, config.height);
-                this.setOffset(config.offsetX, config.offsetY);
-                //console.log(config.width, config.height);
-            }
-        });
-    
-        this.on("animationcomplete", (anim) => {
-            //console.log("애니메이션 끝 실행됨:", anim.key);
-    
-            let config = this.animationHitboxConfig[anim.key];
-            if (config) {
-                this.setBodySize(config.width, config.height);
-                this.setOffset(config.offsetX, config.offsetY);
-                //console.log(config.width, config.height);
-            }
-        });
+        // ✅ 애니메이션 이벤트 리스너 추가
+        this.on("animationstart", this.updateHitbox, this);
+        this.on("animationupdate", this.updateHitbox, this);
+        this.on("animationcomplete", this.updateHitbox, this);
 
         this.scale=1.75;
         this.setBodySize(18,50);
@@ -66,6 +36,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         // ..move
         this.m_moving = false;
 
+        // ..anim
+        this.m_anim = "null";
+
         // ..attack
         this.m_attacking = false;
 
@@ -73,23 +46,44 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.m_canBeAttacked = true;
 
         // ..all action
-        this.m_action = false;
-        if(this.m_moving || this.m_attacking){
-            this.m_action = true;
-        }
-        else {
-            this.m_action = false;
-        }
+        this.m_action = this.m_moving || this.m_attacking;
 
         // [ Stat ]
         this.attackSpeed = 5;
-        
-        
-        // scene , player , maxhp
-        //this.m_hpBar = new hpBar(scene , 100);
+        this.m_maxHp = 100;
+        this.m_hp = this.m_maxHp;
 
+        // ✅ 초기 크기 설정
+        let defaultAnim = this.animationHitboxConfig["player_idle"];
+        this.m_width = defaultAnim.width;
+        this.m_height = defaultAnim.height;
+
+        this.m_hpBar = new hpBar(scene , this);
+
+        scene.events.on("update", (time, delta) => 
+            this.update(time, delta),
+        );
 
     }
+    update() {
+        this.m_hpBar.updatePosition();
+    }
+
+    updateHitbox(anim) {
+        let config = this.animationHitboxConfig[anim.key];
+        if (config) {
+            this.setBodySize(config.width, config.height);
+            this.setOffset(config.offsetX, config.offsetY);
+
+            // ✅ 애니메이션 변경 시 크기 업데이트
+            this.m_width = config.width;
+            this.m_height = config.height;
+
+            // ✅ 체력바 위치 업데이트
+            this.m_hpBar.updatePosition();
+        }
+    }
+
 
     hitByStatic(damage) {
         if (!this.m_canBeAttacked) return;
@@ -99,12 +93,12 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         // 쿨타임을 갖습니다. (Mob에도 똑같이 있음)
         this.getCooldown();
 
-        //this.m_hpBar.decrease(damage);
+        this.m_hpBar.decrease(damage);
 
-        // if(this.m_hpBar.currentHp <= 0) {
-        //     console.log("die");
+        if(this.m_hp <= 0) {
+            console.log("die");
         //     //loseGame(this.scene);
-        // }
+        }
 
 
     }
