@@ -26,7 +26,7 @@ export const mobConfig = {
 
     skeleton : {
         sprite : "skeleton_idle",
-        type : "non",
+        type : "mob",
         bodySize: [40 , 70],
         scale: 2.3,
         speed: 100,

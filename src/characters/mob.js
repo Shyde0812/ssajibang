@@ -1,7 +1,7 @@
 import Phaser from "phaser";
 import { mobConfig } from "../Config/mobConfig";
 
-import Explosion from "../effects/Explosion";
+import vfxManager from "../utils/vfxManager";
 
 import BossHpBar from "../ui/BossHpBar";
 import hpBar from "../ui/hpBar";
@@ -32,6 +32,8 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
         this.initAnimation();
         this.initMovement();
         this.initHpBar(scene);
+
+        this.vfxManager = new vfxManager(scene);
 
         scene.events.on("update", (time, delta) => 
             this.update(time, delta),
@@ -139,6 +141,7 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
         if (this.m_type === "mob") {
             this.m_hpBar = new hpBar(scene, this);
         }
+
     }
 
     update() {
@@ -161,7 +164,22 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
         );
 
         this.controlMovement(this.distance);
-        this.controlhpBarVisible(this.distance);
+
+        // HpBar
+        if(this.m_hpBar) {
+            this.controlhpBarVisible(this.distance);
+
+            // 거리에 따른 체력바 보이기
+            if(this.m_hpBarVisible) {
+                this.m_hpBar.setVisible(true);
+                if (this.m_type === "mob") {
+                    this.m_hpBar.updatePosition();
+                }
+            }
+            else { 
+                this.m_hpBar.setVisible(false);
+            }
+        }
 
 
         // ..Boss
@@ -174,28 +192,16 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
             }
         }
 
-        // HpBar
-        if(this.m_hpBarVisible && this.m_hpBar) {
-            this.m_hpBar.setVisible(true);
-            if (this.m_type === "mob") {
-                this.m_hpBar.updatePosition();
-            }
-            //console.log("visible run");
-        }
-        else if(!this.m_hpBarVisible && this.m_hpBar) {
-            this.m_hpBar.setVisible(false);
-        }
-
-
         // HP 가 0 이하 이고, 죽은 적이 없으면 죽습니다.
         if ( this.m_hp <= 0 && !this.m_isDead) {
-            this.m_hpBar.setVisible(false);
+            if(this.m_hpBar) this.m_hpBar.setVisible(false);
             this.die();
         }
 
         
     }
 
+    // bool MonveMent
     controlMovement(distance) {
         if (distance < this.m_stopDistance) {
             this.m_canMove = false;
@@ -204,6 +210,7 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
         }
     }
 
+    // bool HpBarVisible
     controlhpBarVisible(distance) {
         // 일정 거리 이상이면 보스바 숨김
         if (this.m_hpBarVisible && distance > this.m_hpBarRange) {
@@ -227,13 +234,15 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
         this.m_hpBarVisible = true;
         this.scene.m_hitMobSound.play();
 
-        //this.m_hp -= damage;
+        this.m_hp -= damage;
 
         if(this.m_hpBar) {
-            this.m_hpBar.decrease(damage);
+            this.m_hpBar.updateHealth(this.m_hp);
         }
 
-
+        //..vfx
+        this.vfxManager.playHitEffect(this, "hit");
+        this.vfxManager.showDamageText(this, damage);
     }
 
     displayHit(duration) {
@@ -264,7 +273,7 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
         this.m_isDead = true;
         this.death();
 
-        new Explosion(this.scene, this.x, this.y);
+        this.vfxManager.playHitEffect(this, "explosion");
         this.scene.m_explosionSound.play();
 
         // 모든 타이머와 이벤트를 제거
@@ -291,6 +300,4 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
         //this.scene.time.removeAllEvents();
 
     }
-
-
 }

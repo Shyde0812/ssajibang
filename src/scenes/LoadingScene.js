@@ -37,10 +37,12 @@ import skeleton_walkImg from "../assets/spritesheets/mobs/skeleton_walk.png";
 import skeleton_deathImg from "../assets/spritesheets/mobs/skeleton_death.png";
 
 
-// ..effect
+// ..vfx
 import EFF_AA1Img from "../assets/spritesheets/effect/EFF_AA1.png";
 import EFF_AA2Img from "../assets/spritesheets/effect/EFF_AA2.png";
 import EFF_AA3Img from "../assets/spritesheets/effect/EFF_AA3.png";
+
+import hitEffectImg from "../assets/spritesheets/vfx/hitEffect.png";
 
 
 import explosionImg from "../assets/spritesheets/explosion.png";
@@ -142,7 +144,7 @@ export default class LoadingScene extends Phaser.Scene {
 
         
 
-        // EFFECT
+        // VFX
         this.load.spritesheet("EFF_AA1" , EFF_AA1Img, {
             frameWidth: 100,
             frameHeight: 100,
@@ -156,6 +158,11 @@ export default class LoadingScene extends Phaser.Scene {
         this.load.spritesheet("EFF_AA3" , EFF_AA3Img, {
             frameWidth: 100,
             frameHeight: 100,
+        });
+
+        this.load.spritesheet("hitEffect" , hitEffectImg, {
+            frameWidth: 48,
+            frameHeight: 48,
         });
 
         this.load.spritesheet("explosion", explosionImg, {
@@ -262,7 +269,7 @@ export default class LoadingScene extends Phaser.Scene {
             repeat: 0,
         });
 
-        // ..EFFECT
+        // ..VFX
         this.anims.create({
             key: "EFF_AA1",
             frames: this.anims.generateFrameNames("EFF_AA1"),
@@ -282,6 +289,12 @@ export default class LoadingScene extends Phaser.Scene {
             frames: this.anims.generateFrameNames("EFF_AA3"),
             frameRate: 40,
             end: 0,
+        });
+
+        this.anims.create({
+            key: "hitEffect",
+            frames: this.anims.generateFrameNames("hitEffect"),
+            frameRate: 80,
         });
 
         // ..BOSS
@@ -344,7 +357,7 @@ export default class LoadingScene extends Phaser.Scene {
 
         // ..EFFECT
         this.anims.create({
-            key: "explode",
+            key: "explosion",
             frames: this.anims.generateFrameNumbers("explosion"),
             frameRate: 20,
             repeat: 0,

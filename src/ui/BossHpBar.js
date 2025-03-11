@@ -13,7 +13,6 @@ export default class BossHpBar extends Phaser.GameObjects.Container {
         this.mob = mob; // 체력바가 따라갈 몬스터
 
         this.m_bossName = this.mob.name;
-        console.log(this.m_bossName);
 
         // 체력바 PNG 스프라이트 추가 (BHP_Img 사용) ( 900 , 60 )
         this.hpBarSprite = new BHP(scene, 0, 0); // Container의 (0, 0) 위치에 스프라이트 추가
@@ -66,37 +65,37 @@ export default class BossHpBar extends Phaser.GameObjects.Container {
 
         scene.add.existing(this);
             
-        this.draw();
+        this.updateHealth();
 
     }
 
     // HP를 증가시키고 HP bar를 다시 그리는 메소드입니다.
     increase(amount) {
         this.mob.m_hp = clamp(this.mob.m_hp + amount, 0, this.mob.m_maxHp);
-        this.draw();
+        this.updateHealth();
     }
 
     // HP를 감소시키고 HP bar를 다시 그리는 메소드입니다.
     decrease(amount) {
         this.mob.m_hp = clamp(this.mob.m_hp - amount, 0, this.mob.m_maxHp);
-        this.draw();
+        this.updateHealth();
     }
 
     // HP bar를 실제로 화면에 그려주는 메소드입니다.
-    draw() {
+    updateHealth() {
         // 이전에 그렸던 HP bar는 지워줍니다.
         this.hpFill.clear();
 
         const barWidth = this.hpBarSprite.width * this.hpBarSprite.scaleX;
         const barHeight = this.hpBarSprite.height * this.hpBarSprite.scaleY;
 
-        // this.hpFill.fillStyle(0x21050c); // dark_red
-        // this.hpFill.fillRect(
-        //     -barWidth / 2, 
-        //     0, 
-        //     barWidth, // 스케일 고려
-        //     barHeight //* this.hpBarSprite.scaleY
-        // );
+        this.hpFill.fillStyle(0x21050c); // dark_red
+        this.hpFill.fillRect(
+            -barWidth / 2, 
+            -barHeight / 4, 
+            barWidth, // 스케일 고려
+            barHeight / 4//* this.hpBarSprite.scaleY
+        );
 
         // 총 HP가 100, 남은 HP가 n이라면 흰 HP 배경에서
         // 왼쪽에서부터 n%만 빨간색 또는 초록색 사각형을 그려줍니다.

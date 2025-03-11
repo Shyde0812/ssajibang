@@ -87,7 +87,7 @@ export default class PlayingScene extends Phaser.Scene
     this.m_mobAttackStatic = this.add.group();
     this.m_mobAttackDynamic = this.add.group();
 
-    MobFactory.createMob(this, "medusa", this.map.Width / 2, 256);
+    MobFactory.createMob(this, "medusa", this.map.Width / 2, 512);
     this.m_mobEvents = [];
 
     // ATTACK
