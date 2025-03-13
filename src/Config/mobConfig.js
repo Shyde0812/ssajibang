@@ -39,7 +39,9 @@ export const mobConfig = {
         ],
         hp : 100,
 
+        
         canMove: false, // 부활모션 있는 경우
+        moveDelay : 100,
         stopDistance : [150, 0, 75] // distance, dx , dyy
     }
 }

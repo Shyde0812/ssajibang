@@ -1,6 +1,10 @@
 import Phaser from "phaser";
 import Config from "../Config";
 import hpBar from "../ui/hpBar";
+import { clamp } from "../utils/math";
+
+
+import vfxManager from "../utils/vfxManager";
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
     
@@ -12,6 +16,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         super(scene, scene.map.Width / 2 , scene.map.Height / 2 , "player_idle");
         scene.add.existing(this);
         scene.physics.add.existing(this);
+
+        this.vfxManager = new vfxManager(scene);
 
 
 
@@ -70,6 +76,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     }
     update() {
         this.m_hpBar.updatePosition();
+
+        if(this.m_hp <= 0) {
+            //console.log("die");
+            //loseGame(this.scene);
+        }
     }
 
     updateHitbox(anim) {
@@ -94,14 +105,18 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         //this.scene.m_hurtSound.play();
 
         // 쿨타임을 갖습니다. (Mob에도 똑같이 있음)
-        this.getCooldown();
+        //this.getCooldown();
 
-        this.m_hpBar.decrease(damage);
+        //..vfx
+        this.vfxManager.playHitEffect(this, "hit");
+        this.vfxManager.showDamageText(this, damage);
 
-        if(this.m_hp <= 0) {
-            console.log("die");
-        //     //loseGame(this.scene);
+        this.m_hp = clamp(this.m_hp - damage, 0, this.m_maxHp);
+
+        if(this.m_hpBar) {
+            this.m_hpBar.updateHealth(this.m_hp);
         }
+
 
 
     }

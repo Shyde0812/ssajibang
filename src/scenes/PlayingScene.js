@@ -106,7 +106,32 @@ export default class PlayingScene extends Phaser.Scene
     this.physics.add.overlap(
       this.m_mobAttackStatic,
       this.m_player,
-      () => this.m_player.hitByStatic(10),
+      (hitbox , player) => {
+
+        if (player.m_parrying) {
+          //this.triggerParryEffect(attack.owner); // 공격한 몬스터를 기절시키는 함수
+
+          // 히트박스 비활성화 (제거하지 않고)
+          hitbox.setActive(false);
+          hitbox.setVisible(false);
+          
+          // 그룹에서 일시적으로 제거 (완전히 제거하지 않음)
+          this.m_mobAttackStatic.remove(hitbox, true);
+
+          console.log("Parrying sucess");
+
+        } else {
+            player.hitByStatic(10);
+        }
+        
+        // 히트박스 비활성화 (제거하지 않고)
+        hitbox.setActive(false);
+        hitbox.setVisible(false);
+        
+        // 그룹에서 일시적으로 제거 (완전히 제거하지 않음)
+        this.m_mobAttackStatic.remove(hitbox, true);
+        
+      },
       null,
       this
     );
@@ -145,22 +170,6 @@ export default class PlayingScene extends Phaser.Scene
         });
       }
     });
-
-    this.physics.add.overlap(
-      this.m_mobAttackStatic,
-      this.m_player,
-      (attack, player) => {
-          if (player.m_parrying) {
-              //this.triggerParryEffect(attack.owner); // 공격한 몬스터를 기절시키는 함수
-              console.log("Parrying sucess");
-          } else {
-              player.hitByStatic(10);
-          }
-      },
-      null,
-      this
-    );
-
     
   }
 

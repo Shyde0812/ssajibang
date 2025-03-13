@@ -22,6 +22,13 @@ export function AttackEvent(scene, skill) {
 
         case "Parrying" :
 
+            
+            //피격 받고 나서일때는 사용할 수 없음 (이게 경직 상태인가? 흠)
+            // if (!scene.m_player.m_canBeAttacked) {
+            //     console.log("Parry 중")
+            //     return;
+            // }
+
             scene.m_player.m_parrying = true;
             scene.m_player.m_canBeAttacked = false;
 

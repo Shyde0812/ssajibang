@@ -15,7 +15,7 @@ export default class skeleton extends mob {
             offsetX: 50,  // 공격 범위의 X 오프셋
             offsetY: 0,   // 공격 범위의 Y 오프셋
             width: 100,    // Hitbox의 너비
-            height: 100     // Hitbox의 높이
+            height: 150     // Hitbox의 높이
         };
 
         // zone 생성 후 물리 시스템에 추가
@@ -25,8 +25,10 @@ export default class skeleton extends mob {
             AutoAttackhiboxConfig.width,
             AutoAttackhiboxConfig.height
         );
-
         this.hitbox = this.scene.physics.add.existing(this.hitbox , false);
+
+        // 히트박스가 이미 데미지를 주었는지 여부를 추적하는 속성
+        this.hitbox.hasDealtDamage = false;
 
         this.hitbox.setActive(false);
         this.hitbox.setVisible(false);
@@ -59,17 +61,10 @@ export default class skeleton extends mob {
         // hitbox 생성 타이밍
         this.on("animationupdate", (animation, frame) => {
 
-            if (animation.key === "skeleton_attack") {
+            if (animation.key === "skeleton_attack" && frame.index === 6) {
 
-                if(frame.index === 1) console.log("1");
-                if(frame.index === 2) {
-                    console.log("2");
                     this.setHitboxActive(true);
                 }
-
-    
-
-            }
 
         }, this);
         
@@ -113,13 +108,9 @@ export default class skeleton extends mob {
         let dx = Math.abs(this.x - this.scene.m_player.x);
         let dy = Math.abs(this.y - this.scene.m_player.y);
     
-        if (distance < this.mob.stopDistance[0]) {
-            if (dy < this.mob.stopDistance[2]) {
-                this.m_canMove = false;
-                this.attack();
-            } else {
-                this.scene.physics.moveToObject(this, { x: this.x, y: this.scene.m_player.y }, this.m_speed);
-            }
+        if (distance < this.mob.stopDistance[0] && dy < this.mob.stopDistance[2]) {
+            this.attack();
+            this.m_canMove = false;
         }
     }
 
@@ -128,11 +119,14 @@ export default class skeleton extends mob {
             // Hitbox 크기 및 위치 설정
             this.hitbox.setSize(100, 50);
             if(this.flipX) {
-                this.hitbox.setPosition(this.x + 50, this.y);
+                this.hitbox.setPosition(this.x + 80, this.y);
             }
             else {
-                this.hitbox.setPosition(this.x - 50, this.y);
+                this.hitbox.setPosition(this.x - 80, this.y);
             }
+
+            // 히트박스 데미지 플래그 초기화
+            this.hitbox.hasDealtDamage = false;
             
             // 히트박스 활성화
             this.hitbox.setActive(true);
