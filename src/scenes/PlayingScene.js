@@ -5,7 +5,7 @@ import attackConfig from "../Config/AttackConfig";
 import MobFactory from '../utils/mobFactory';
 
 import { setBackground, setTilemapBackground } from '../utils/backgroundManager';
-import { AttackEvent} from '../utils/attackManager';
+import { AttackEvent , removeAttack} from '../utils/attackManager';
 
 
 export default class PlayingScene extends Phaser.Scene
@@ -68,15 +68,18 @@ export default class PlayingScene extends Phaser.Scene
 
     
 
-    // 공격 담당
+    // 스킬 담당
     this.m_attackKeys = {
       D: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D),
+      S: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S),
+
       F: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F),
-      Q: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q)
+      Q: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q),
     };
 
     this.skillMapping = {
       D: "AutoAttack",  
+      S: "Parrying",
       // F: "Slash", 
       // Q: "Fireball"
     };
@@ -143,12 +146,28 @@ export default class PlayingScene extends Phaser.Scene
       }
     });
 
+    this.physics.add.overlap(
+      this.m_mobAttackStatic,
+      this.m_player,
+      (attack, player) => {
+          if (player.m_parrying) {
+              //this.triggerParryEffect(attack.owner); // 공격한 몬스터를 기절시키는 함수
+              console.log("Parrying sucess");
+          } else {
+              player.hitByStatic(10);
+          }
+      },
+      null,
+      this
+    );
+
     
   }
 
   update() {
     
     this.attackPlayerManager();
+
 
     if (this.m_player.m_moving) {
       let distanceToTarget = Phaser.Math.Distance.Between(
@@ -236,6 +255,7 @@ export default class PlayingScene extends Phaser.Scene
       }
     })
   }
+
 }
 
 

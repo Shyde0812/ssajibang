@@ -52,7 +52,7 @@ export default class AutoAttack {
 
 
         this.scene.m_player.off("animationupdate"); // 기존 리스너 제거
-
+        
         this.scene.m_player.on("animationupdate", (animation, frame) => {
             if (animation.key === anim && frame.index === 3) {
 

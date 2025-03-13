@@ -20,7 +20,7 @@ export const mobConfig = {
 
         canMove : true,
         moveDelay : 1000,
-        stopDistance : 500,
+        stopDistance : [500],
 
     },
 
@@ -40,6 +40,6 @@ export const mobConfig = {
         hp : 100,
 
         canMove: false, // 부활모션 있는 경우
-        stopDistance : 150,
+        stopDistance : [150, 0, 75] // distance, dx , dyy
     }
 }

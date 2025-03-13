@@ -11,7 +11,7 @@ class VFXManager {
         if (!target) return;
 
         this.vfxConfig = vfxConfig[key];
-        console.log(this.vfxConfig);
+        //console.log(this.vfxConfig);
 
         // 피격 효과 애니메이션 추가
         const vfx = this.scene.add.sprite(target.x, target.y, this.vfxConfig.anim);
@@ -20,7 +20,7 @@ class VFXManager {
 
 
         // 몬스터의 bodySize를 기준으로 VFX 크기 조절
-        const baseSize = 50; // VFX 기본 크기
+        const baseSize = 25; // VFX 기본 크기
         const bodyWidth = target.body ? target.body.width : target.width;
         const bodyHeight = target.body ? target.body.height : target.height;
         const vfxScaleX = bodyWidth / baseSize;

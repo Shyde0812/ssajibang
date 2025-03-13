@@ -19,6 +19,25 @@ export function AttackEvent(scene, skill) {
             autoAttack.nextCombo();
 
             break;
+
+        case "Parrying" :
+
+            scene.m_player.m_parrying = true;
+            scene.m_player.m_canBeAttacked = false;
+
+            //this.scene.m_player.play("player_parrying", true);
+
+            // 0.3초 후 패링 해제
+            scene.time.delayedCall(300, () => {
+                scene.m_player.m_canBeAttacked = true;
+                scene.m_player.m_parrying = false;
+                scene.m_player.m_attacking = false;
+                scene.m_player.play("player_idle" , true)
+            });
+
+
+            console.log("Parrying");
+            break;
     }
 }
 

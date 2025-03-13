@@ -31,7 +31,7 @@ const Config = {
         arcade: {
             //debug: process.env.DEBUG === "true",
             debug: import.meta.env.VITE_DEBUG === "true",
-            debug: false,
+            debug: true,
         },
     },
 

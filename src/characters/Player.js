@@ -42,11 +42,14 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         // ..attack
         this.m_attacking = false;
 
+        // ..parrying
+        this.m_parrying = false;
+
         // ..Damaged
         this.m_canBeAttacked = true;
 
         // ..all action
-        this.m_action = this.m_moving || this.m_attacking;
+        this.m_action = this.m_moving || this.m_attacking || this.m_parrying;
 
         // [ Stat ]
         this.attackSpeed = 5;

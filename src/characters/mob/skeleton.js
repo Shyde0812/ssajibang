@@ -1,10 +1,14 @@
 import mob from "../mob";
 
+import { mobConfig } from "../../Config/mobConfig";
+
 
 
 export default class skeleton extends mob {
     constructor(scene, x, y , name) {
         super(scene, x, y, name);
+        
+        this.mob = mobConfig[name];
 
         // Hitbox 생성 (zone 객체로, 물리 시스템에 추가)
         const AutoAttackhiboxConfig = {
@@ -49,11 +53,25 @@ export default class skeleton extends mob {
         // 기존 이벤트 리스너 제거 (중복 방지)
         this.off('animationcomplete-skeleton_attack');
         
-        // 애니메이션 시작 전에 히트박스 활성화
-        this.setHitboxActive(true);
-        
         // 애니메이션 재생
         this.play("skeleton_attack", true);
+        
+        // hitbox 생성 타이밍
+        this.on("animationupdate", (animation, frame) => {
+
+            if (animation.key === "skeleton_attack") {
+
+                if(frame.index === 1) console.log("1");
+                if(frame.index === 2) {
+                    console.log("2");
+                    this.setHitboxActive(true);
+                }
+
+    
+
+            }
+
+        }, this);
         
         // 애니메이션 완료 이벤트 설정
         this.once('animationcomplete', function(animation) {
@@ -92,11 +110,16 @@ export default class skeleton extends mob {
     }
     // Override
     controlMovement(distance) {
-        
-        if (distance < this.m_stopDistance) {
-            this.m_canMove = false;
-            this.m_canFlip = false;
-            this.attack();
+        let dx = Math.abs(this.x - this.scene.m_player.x);
+        let dy = Math.abs(this.y - this.scene.m_player.y);
+    
+        if (distance < this.mob.stopDistance[0]) {
+            if (dy < this.mob.stopDistance[2]) {
+                this.m_canMove = false;
+                this.attack();
+            } else {
+                this.scene.physics.moveToObject(this, { x: this.x, y: this.scene.m_player.y }, this.m_speed);
+            }
         }
     }
 
