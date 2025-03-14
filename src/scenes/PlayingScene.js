@@ -2,8 +2,10 @@ import Phaser, { Tilemaps } from 'phaser';
 import Config from '../Config';
 import Player from "../characters/Player";
 import attackConfig from "../Config/AttackConfig";
-import MobFactory from '../utils/mobFactory';
 
+// utils
+import MobFactory from '../utils/mobFactory';
+import vfxManager from "../utils/vfxManager";
 import { setBackground, setTilemapBackground } from '../utils/backgroundManager';
 import { AttackEvent , removeAttack} from '../utils/attackManager';
 
@@ -46,6 +48,7 @@ export default class PlayingScene extends Phaser.Scene
     //setBackground(this, "bg");
 
     this.m_player = new Player(this);
+    this.vfxManager = new vfxManager(this);
 
     // Phaser에서 카메라가 특정 게임 오브젝트를 따라가도록 설정하는 코드입니다.
     this.cameras.main.startFollow(this.m_player);
@@ -101,8 +104,7 @@ export default class PlayingScene extends Phaser.Scene
 
     // COLLISIONS
 
-    // Player와 mob이 부딪혔을 경우 player에게 데미지 10을 줍니다? 이건 몬스터마다 다르게 만들어야할듯
-    // ( player.js 에서 hitByMob 함수 확인 )
+    // mob -> player
     this.physics.add.overlap(
       this.m_mobAttackStatic,
       this.m_player,
@@ -110,13 +112,14 @@ export default class PlayingScene extends Phaser.Scene
 
         if (player.m_parrying) {
           //this.triggerParryEffect(attack.owner); // 공격한 몬스터를 기절시키는 함수
-
+          hitbox.owner.stun();
           // 히트박스 비활성화 (제거하지 않고)
           hitbox.setActive(false);
           hitbox.setVisible(false);
           
           // 그룹에서 일시적으로 제거 (완전히 제거하지 않음)
           this.m_mobAttackStatic.remove(hitbox, true);
+          
 
           console.log("Parrying sucess");
 
@@ -136,8 +139,7 @@ export default class PlayingScene extends Phaser.Scene
       this
     );
 
-    // mob이 static 공격에 부딪혓을 경우 mob에 해당 공격의 데미지만큼 데미지를 줍니다.
-    // (Mob.js에서 hitByStatic 함수 확인)
+    // player -> mob
     this.physics.add.overlap(
       this.m_weaponStatic,
       this.m_mobs,
@@ -176,6 +178,9 @@ export default class PlayingScene extends Phaser.Scene
   update() {
     
     this.attackPlayerManager();
+    // if(this.m_player.m_moving) {
+    //   this.vfxManager.playHitEffect("run");
+    // }
 
 
     if (this.m_player.m_moving) {
@@ -209,13 +214,16 @@ export default class PlayingScene extends Phaser.Scene
     let dx = targetX - this.m_player.x;
     let dy = targetY - this.m_player.y;
     let distance = Phaser.Math.Distance.Between(this.m_player.x, this.m_player.y, targetX, targetY);
+    
 
     // 이동 방향에 따라 캐릭터 좌우 반전
     if (dx < 0) {
       this.m_player.setFlipX(true); // 왼쪽 이동
+      this.vfxManager.playHitEffect(this.m_player, "run" , true);
     } else {
         this.m_player.setFlipX(false); // 오른쪽 이동
-    } 
+        this.vfxManager.playHitEffect(this.m_player, "run" , false);
+    }
 
     const speed = 200;
     let angle = Math.atan2(dy, dx);

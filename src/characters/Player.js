@@ -28,6 +28,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             //player_attack: { width: 18, height: 50, offsetX: ( 100 / 2 ) - 10 , offsetY: 10 },
             pl_AA1: { width: 18, height: 50, offsetX: ( 80 / 2 ) - 10 , offsetY: 10 },
             pl_AA2: { width: 18, height: 50, offsetX: ( 80 / 2 ) - 10 , offsetY: 10 },
+            pl_AA3: { width: 18, height: 50, offsetX: ( 80 / 2 ) - 10 , offsetY: 10 },
         };
 
         // ✅ 애니메이션 이벤트 리스너 추가

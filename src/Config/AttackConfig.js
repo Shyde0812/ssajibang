@@ -14,7 +14,7 @@ const attackConfig = {
         effect : "",
         damage : 0,
         scale : 2,
-        anim : "",
+        anim : "player_parry",
         cooldown : 0.3 * 1000,
     },
 };

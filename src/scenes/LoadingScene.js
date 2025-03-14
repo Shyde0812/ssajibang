@@ -22,6 +22,7 @@ import bgImg from "../assets/images/background.png";
 import player_idleImg from "../assets/spritesheets/player/player_idle.png";
 import player_runImg from "../assets/spritesheets/player/player_run.png";
 import player_attackImg from "../assets/spritesheets/player/player_attack.png";
+import player_parryImg from "../assets/spritesheets/player/player_parry.png";
 
 import pl_AA1Img from "../assets/spritesheets/player/pl_AA1.png";
 import pl_AA2Img from "../assets/spritesheets/player/pl_AA2.png";
@@ -35,7 +36,7 @@ import skeleton_idleImg from "../assets/spritesheets/mobs/skeleton_idle.png";
 import skeleton_attackImg from "../assets/spritesheets/mobs/skeleton_attack.png";
 import skeleton_walkImg from "../assets/spritesheets/mobs/skeleton_walk.png";
 import skeleton_deathImg from "../assets/spritesheets/mobs/skeleton_death.png";
-import skeleton_parriedImg from "../assets/spritesheets/mobs/skeleton_parried.png";
+import skeleton_stunImg from "../assets/spritesheets/mobs/skeleton_stun.png";
 
 
 // ..vfx
@@ -44,6 +45,8 @@ import EFF_AA2Img from "../assets/spritesheets/effect/EFF_AA2.png";
 import EFF_AA3Img from "../assets/spritesheets/effect/EFF_AA3.png";
 
 import hitEffectImg from "../assets/spritesheets/vfx/hitEffect.png";
+
+import runEffectImg from "../assets/spritesheets/vfx/runEffect.png";
 
 
 import explosionImg from "../assets/spritesheets/explosion.png";
@@ -125,6 +128,12 @@ export default class LoadingScene extends Phaser.Scene {
               frameHeight: 65
         });
 
+        this.load.spritesheet('player_parry', 
+            player_parryImg, {
+              frameWidth: 80,
+              frameHeight: 60
+        });
+
         this.load.spritesheet('pl_AA1', // AutoAttack
             pl_AA1Img, {
               frameWidth: 80,
@@ -147,23 +156,28 @@ export default class LoadingScene extends Phaser.Scene {
 
         // VFX
         this.load.spritesheet("EFF_AA1" , EFF_AA1Img, {
-            frameWidth: 100,
-            frameHeight: 100,
+            frameWidth: 128,
+            frameHeight: 128,
         });
 
         this.load.spritesheet("EFF_AA2" , EFF_AA2Img, {
-            frameWidth: 100,
-            frameHeight: 100,
+            frameWidth: 128,
+            frameHeight: 128,
         });
 
         this.load.spritesheet("EFF_AA3" , EFF_AA3Img, {
-            frameWidth: 100,
-            frameHeight: 100,
+            frameWidth: 128,
+            frameHeight: 128,
         });
 
         this.load.spritesheet("hitEffect" , hitEffectImg, {
             frameWidth: 48,
             frameHeight: 48,
+        });
+
+        this.load.spritesheet("runEffect" , runEffectImg, {
+            frameWidth: 64,
+            frameHeight: 64,
         });
 
         this.load.spritesheet("explosion", explosionImg, {
@@ -188,8 +202,8 @@ export default class LoadingScene extends Phaser.Scene {
         });
 
         this.load.spritesheet("skeleton_attack", skeleton_attackImg, {
-            frameWidth: 150,
-            frameHeight: 150,
+            frameWidth: 128,
+            frameHeight: 128,
         });
 
         this.load.spritesheet("skeleton_walk", skeleton_walkImg, {
@@ -202,7 +216,7 @@ export default class LoadingScene extends Phaser.Scene {
             frameHeight: 150,
         });
 
-        this.load.spritesheet("skeleton_parried", skeleton_deathImg, {
+        this.load.spritesheet("skeleton_stun", skeleton_stunImg, {
             frameWidth: 150,
             frameHeight: 150,
         });
@@ -256,6 +270,13 @@ export default class LoadingScene extends Phaser.Scene {
         });
 
         this.anims.create({
+            key: "player_parry",
+            frames: this.anims.generateFrameNumbers("player_parry"),
+            frameRate: 1, // 3 = 1s
+            repeat: 0,
+        });
+
+        this.anims.create({
             key: "pl_AA1",
             frames: this.anims.generateFrameNumbers("pl_AA1"),
             frameRate: 4, // 4 = 1s
@@ -280,28 +301,31 @@ export default class LoadingScene extends Phaser.Scene {
         this.anims.create({
             key: "EFF_AA1",
             frames: this.anims.generateFrameNames("EFF_AA1"),
-            frameRate: 40,
-            end: 0,
+            frameRate: 16,
         });
 
         this.anims.create({
             key: "EFF_AA2",
             frames: this.anims.generateFrameNames("EFF_AA2"),
-            frameRate: 40,
-            end: 0,
+            frameRate: 16,
         });
 
         this.anims.create({
             key: "EFF_AA3",
-            frames: this.anims.generateFrameNames("EFF_AA3"),
+            frames: this.anims.generateFrameNames("EFF_AA3" ,{end : 5}),
             frameRate: 40,
-            end: 0,
         });
 
         this.anims.create({
             key: "hitEffect",
             frames: this.anims.generateFrameNames("hitEffect"),
             frameRate: 40,
+        });
+
+        this.anims.create({
+            key: "runEffect",
+            frames: this.anims.generateFrameNames("runEffect"),
+            frameRate: 16,
         });
 
         // ..BOSS
@@ -333,8 +357,7 @@ export default class LoadingScene extends Phaser.Scene {
 
         this.anims.create({
             key: "skeleton_attack",
-            frames: this.anims.generateFrameNumbers("skeleton_attack" , 
-                { start: 7 , end : 0}),
+            frames: this.anims.generateFrameNumbers("skeleton_attack"),
             frameRate: 8,
             repeat: 0,
         });
@@ -347,20 +370,27 @@ export default class LoadingScene extends Phaser.Scene {
         });
 
         this.anims.create({
-            key: "skeleton_death",
-            frames: this.anims.generateFrameNumbers("skeleton_death" , 
-                { start: 0, end: 3 }).reverse(),
+            key: "skeleton_revive",
+            frames: this.anims.generateFrameNumbers("skeleton_death" ,{ start: 3, end: 0 }),
             frameRate: 8,
-
             repeat: 0,
         });
 
         this.anims.create({
-            key: "skeleton_revive",
+            key: "skeleton_death",
             frames: this.anims.generateFrameNumbers("skeleton_death"),
             frameRate: 4,
             repeat: 0,
         });
+
+
+        this.anims.create({
+            key: "skeleton_stun",
+            frames: this.anims.generateFrameNumbers("skeleton_stun", {start : 3, end : 0}),
+            frameRate: 8,
+            repeat: 0,
+        });
+
 
 
         // ..EFFECT

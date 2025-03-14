@@ -43,10 +43,11 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
     // 다른 이벤트가 있을 경우 이곳에 추가하면 됩니다.
     addEvent(event) {
         this.events.push(event);
+        
     }
 
     initProperties() {
-        // Option
+        // [Option]
         this.scale = this.config.scale || 1;
         this.name = this.config.name || "";
         this.m_type = this.config.type || "mob";
@@ -57,17 +58,18 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
         this.m_width = this.config.bodySize[0];
         this.m_height = this.config.bodySize[1];
 
-        // Set
+        // [state]
         this.m_isDead = false;
         this.m_canBeAttacked = true;
         this.m_canMove = this.config.canMove;
         this.m_canFlip = true; // 고개 돌리기
+        this.m_isStun = false;
 
-        // Move
+        // [Move]
         this.m_moveDelay = this.config.moveDelay || 100;
         this.m_stopDistance = this.config.stopDistance || 100;
 
-        // HpBar
+        // [HpBar]
         this.m_hpBarVisible = false;
         this.m_hpBarRange = this.config.hpBarRange || 500;
     }
@@ -152,7 +154,7 @@ export default class mob extends Phaser.Physics.Arcade.Sprite {
         
         // 바라 보는 방향이다.
         if (this.m_canFlip) {
-            if (this.x > this.scene.m_player.x) this.flipX = false;
+            if (this.x < this.scene.m_player.x) this.flipX = false;
             else this.flipX = true;
         }
 

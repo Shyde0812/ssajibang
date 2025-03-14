@@ -7,14 +7,16 @@ class VFXManager {
 
     }
 
-    playHitEffect(target , key) {
+    playHitEffect(target , key, isflip) {
         if (!target) return;
 
         this.vfxConfig = vfxConfig[key];
         //console.log(this.vfxConfig);
 
         // 피격 효과 애니메이션 추가
-        const vfx = this.scene.add.sprite(target.x, target.y, this.vfxConfig.anim);
+        const offsetX = ( isflip ? -this.vfxConfig.offsetX : this.vfxConfig.offsetX) || 0;
+        const offsetY = this.vfxConfig.offsetY || 0;
+        const vfx = this.scene.add.sprite(target.x + offsetX, target.y + offsetY, this.vfxConfig.anim);
         //vfx.scale = this.vfxConfig.scale;
         vfx.setDepth(target.depth + 1); // 몬스터보다 위에 표시
 
@@ -29,6 +31,7 @@ class VFXManager {
         const vfxScale = Math.min(vfxScaleX , vfxScaleY);
 
         vfx.setScale(vfxScale); // 크기 적용 (2차원도 가능)
+        vfx.setFlipX(isflip);
 
         // 애니메이션 실행 후 자동 제거
         vfx.play(this.vfxConfig.anim); 

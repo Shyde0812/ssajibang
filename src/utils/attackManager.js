@@ -28,7 +28,7 @@ export function AttackEvent(scene, skill) {
             //     console.log("Parry 중")
             //     return;
             // }
-
+            scene.m_player.play(anim);
             scene.m_player.m_parrying = true;
             scene.m_player.m_canBeAttacked = false;
 
