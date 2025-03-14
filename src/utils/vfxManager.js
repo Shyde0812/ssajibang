@@ -43,7 +43,8 @@ class VFXManager {
     showDamageText(target, damage) {
         if (!target) return;
 
-        const damageText = this.scene.add.text(target.x, target.y - 20, damage, {
+        let randomValue = Phaser.Math.Between(-5, 5); 
+        const damageText = this.scene.add.text(target.x + randomValue, target.y - 20 + randomValue, damage, {
             font: '20px Arial',
             fill: '#ff0000',
             stroke: '#000000',

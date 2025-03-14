@@ -1,7 +1,12 @@
 const vfxConfig = {
     hit : {
         anim : "hitEffect",
-        scale : 3,
+        scale : 2.5,
+    },
+
+    perry : {
+        anim : "perryEffect",
+        scale : 2.5,
     },
 
     explosion : {

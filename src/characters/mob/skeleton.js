@@ -59,7 +59,7 @@ export default class skeleton extends mob {
         this.play("skeleton_stun", true);
 
         this.scene.time.addEvent({
-            delay: 3 * 1000,
+            delay: 1.5 * 1000,
             callback: () => {
                 if(!this.m_isDead) {
                     this.idle();

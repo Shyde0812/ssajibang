@@ -45,6 +45,7 @@ import EFF_AA2Img from "../assets/spritesheets/effect/EFF_AA2.png";
 import EFF_AA3Img from "../assets/spritesheets/effect/EFF_AA3.png";
 
 import hitEffectImg from "../assets/spritesheets/vfx/hitEffect.png";
+import perryEffectImg from "../assets/spritesheets/vfx/perryEffect.png";
 
 import runEffectImg from "../assets/spritesheets/vfx/runEffect.png";
 
@@ -171,6 +172,11 @@ export default class LoadingScene extends Phaser.Scene {
         });
 
         this.load.spritesheet("hitEffect" , hitEffectImg, {
+            frameWidth: 48,
+            frameHeight: 48,
+        });
+
+        this.load.spritesheet("perryEffect" , perryEffectImg, {
             frameWidth: 48,
             frameHeight: 48,
         });
@@ -319,7 +325,13 @@ export default class LoadingScene extends Phaser.Scene {
         this.anims.create({
             key: "hitEffect",
             frames: this.anims.generateFrameNames("hitEffect"),
-            frameRate: 40,
+            frameRate: 21,
+        });
+
+        this.anims.create({
+            key: "perryEffect",
+            frames: this.anims.generateFrameNames("perryEffect"),
+            frameRate: 21,
         });
 
         this.anims.create({
@@ -386,7 +398,7 @@ export default class LoadingScene extends Phaser.Scene {
 
         this.anims.create({
             key: "skeleton_stun",
-            frames: this.anims.generateFrameNumbers("skeleton_stun", {start : 3, end : 0}),
+            frames: this.anims.generateFrameNumbers("skeleton_stun", {start : 3, end : 2}),
             frameRate: 8,
             repeat: 0,
         });

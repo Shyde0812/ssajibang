@@ -120,11 +120,13 @@ export default class PlayingScene extends Phaser.Scene
           // 그룹에서 일시적으로 제거 (완전히 제거하지 않음)
           this.m_mobAttackStatic.remove(hitbox, true);
           
+          
+          this.vfxManager.playHitEffect(hitbox, "perry" , this.m_player.m_flip);
 
           console.log("Parrying sucess");
 
         } else {
-            player.hitByStatic(10);
+            player.hitByStatic(10); 
         }
         
         // 히트박스 비활성화 (제거하지 않고)
@@ -146,6 +148,11 @@ export default class PlayingScene extends Phaser.Scene
       (weapon, mob) => {
         if (!mob.hitboxes) {
           mob.hitByStatic(weapon.m_damage , weapon.duration);
+
+          //..vfx
+          // this.vfxManager.playHitEffect(mob, "hit" , this.m_player.m_flip);
+          // this.vfxManager.showDamageText(mob, weapon.m_damage);
+  
         }
       },
       null,
@@ -178,9 +185,6 @@ export default class PlayingScene extends Phaser.Scene
   update() {
     
     this.attackPlayerManager();
-    // if(this.m_player.m_moving) {
-    //   this.vfxManager.playHitEffect("run");
-    // }
 
 
     if (this.m_player.m_moving) {
@@ -219,10 +223,10 @@ export default class PlayingScene extends Phaser.Scene
     // 이동 방향에 따라 캐릭터 좌우 반전
     if (dx < 0) {
       this.m_player.setFlipX(true); // 왼쪽 이동
-      this.vfxManager.playHitEffect(this.m_player, "run" , true);
+      this.m_player.m_flip = true;
     } else {
         this.m_player.setFlipX(false); // 오른쪽 이동
-        this.vfxManager.playHitEffect(this.m_player, "run" , false);
+        this.m_player.m_flip = false;
     }
 
     const speed = 200;
