@@ -82,7 +82,7 @@ export default class PlayingScene extends Phaser.Scene
 
     this.skillMapping = {
       D: "AutoAttack",  
-      S: "Parrying",
+      S: "Perry",
       // F: "Slash", 
       // Q: "Fireball"
     };
@@ -99,10 +99,42 @@ export default class PlayingScene extends Phaser.Scene
     // ATTACK
     this.m_weaponDynamic = this.add.group();
     this.m_weaponStatic = this.add.group();
+    this.m_weaponPerry = this.add.group();
     //this.m_attackEvents = {};
 
 
     // COLLISIONS
+
+    this.physics.add.overlap(
+      this.m_mobAttackStatic,
+      this.m_weaponPerry,
+      (hitbox , perry) => {
+
+        hitbox.owner.stun();
+        // 히트박스 비활성화 (제거하지 않고)
+        hitbox.setActive(false);
+        hitbox.setVisible(false);
+        
+        // 그룹에서 일시적으로 제거 (완전히 제거하지 않음)
+        this.m_mobAttackStatic.remove(hitbox, true);
+        
+        
+        this.vfxManager.playHitEffect(hitbox, "perry" , this.m_player.m_flip);
+
+        console.log("Parrying sucess");
+
+        // 히트박스 비활성화 (제거하지 않고)
+        hitbox.setActive(false);
+        hitbox.setVisible(false);
+        
+        // 그룹에서 일시적으로 제거 (완전히 제거하지 않음)
+        this.m_mobAttackStatic.remove(hitbox, true);
+        //perry.destroy();
+        
+      },
+      null,
+      this
+    );
 
     // mob -> player
     this.physics.add.overlap(
@@ -110,24 +142,7 @@ export default class PlayingScene extends Phaser.Scene
       this.m_player,
       (hitbox , player) => {
 
-        if (player.m_parrying) {
-          //this.triggerParryEffect(attack.owner); // 공격한 몬스터를 기절시키는 함수
-          hitbox.owner.stun();
-          // 히트박스 비활성화 (제거하지 않고)
-          hitbox.setActive(false);
-          hitbox.setVisible(false);
-          
-          // 그룹에서 일시적으로 제거 (완전히 제거하지 않음)
-          this.m_mobAttackStatic.remove(hitbox, true);
-          
-          
-          this.vfxManager.playHitEffect(hitbox, "perry" , this.m_player.m_flip);
-
-          console.log("Parrying sucess");
-
-        } else {
-            player.hitByStatic(10); 
-        }
+        player.hitByStatic(10); 
         
         // 히트박스 비활성화 (제거하지 않고)
         hitbox.setActive(false);

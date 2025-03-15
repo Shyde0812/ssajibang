@@ -2,6 +2,8 @@ import attackConfig from "../Config/AttackConfig";
 
 import AutoAttack from "../attacks/AutoAttack";
 
+import EFF_perry from "../vfx/EFF_perry";
+
 export function AttackEvent(scene, skill) {
     if (!attackConfig[skill]) return;
 
@@ -20,14 +22,23 @@ export function AttackEvent(scene, skill) {
 
             break;
 
-        case "Parrying" :
+        case "Perry" :
 
-            
-            //피격 받고 나서일때는 사용할 수 없음 (이게 경직 상태인가? 흠)
-            // if (!scene.m_player.m_canBeAttacked) {
-            //     console.log("Parry 중")
-            //     return;
-            // }
+            let mouseX = scene.input.activePointer.worldX;
+            let mouseY = scene.input.activePointer.worldY;
+
+            // ✅ 플레이어를 마우스 방향으로 바라보게 설정
+            scene.m_player.flipX = mouseX < scene.m_player.x;
+
+            scene.m_player.off("animationupdate"); // 기존 리스너 제거
+
+            new EFF_perry(scene,
+                [scene.m_player.x, scene.m_player.y],
+                [mouseX, mouseY], 
+                scale, 
+                cooldown,
+            );
+
             scene.m_player.play(anim);
             scene.m_player.m_parrying = true;
             scene.m_player.m_canBeAttacked = false;

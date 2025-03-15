@@ -22,19 +22,22 @@ class VFXManager {
 
 
         // 몬스터의 bodySize를 기준으로 VFX 크기 조절
-        const baseSize = 25; // VFX 기본 크기
-        const bodyWidth = target.body ? target.body.width : target.width;
-        const bodyHeight = target.body ? target.body.height : target.height;
-        const vfxScaleX = bodyWidth / baseSize;
-        const vfxScaleY = bodyHeight / baseSize;
-
-        const vfxScale = Math.min(vfxScaleX , vfxScaleY);
-
-        vfx.setScale(vfxScale); // 크기 적용 (2차원도 가능)
+        if(!this.vfxConfig.scale) {const baseSize = 25; // VFX 기본 크기
+            const bodyWidth = target.body ? target.body.width : target.width;
+            const bodyHeight = target.body ? target.body.height : target.height;
+            const vfxScaleX = bodyWidth / baseSize;
+            const vfxScaleY = bodyHeight / baseSize;
+    
+            const vfxScale = Math.min(vfxScaleX , vfxScaleY);
+    
+            vfx.setScale(vfxScale); // 크기 적용 (2차원도 가능)
+        } else {
+            vfx.setScale(this.vfxConfig.scale);
+        }
         vfx.setFlipX(isflip);
 
         // 애니메이션 실행 후 자동 제거
-        vfx.play(this.vfxConfig.anim); 
+        vfx.play(this.vfxConfig.anim);
         vfx.on('animationcomplete', () => {
             vfx.destroy();
         });

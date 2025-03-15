@@ -1,5 +1,5 @@
 import attackConfig from "../Config/AttackConfig";
-import EFF_AA from "../effects/EFF_AA"; // 공격 효과 (EFF_AA1.js)
+import EFF_AA from "../vfx/EFF_AA"; // 공격 효과 (EFF_AA1.js)
 
 
 export default class AutoAttack {

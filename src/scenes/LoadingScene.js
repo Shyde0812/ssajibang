@@ -28,6 +28,8 @@ import pl_AA1Img from "../assets/spritesheets/player/pl_AA1.png";
 import pl_AA2Img from "../assets/spritesheets/player/pl_AA2.png";
 import pl_AA3Img from "../assets/spritesheets/player/pl_AA3.png";
 
+import pl_perryImg from "../assets/spritesheets/player/pl_perry.png";
+
 // ..boss
 import boss_idleImg from "../assets/spritesheets/boss/boss_idle.png";
 
@@ -135,6 +137,12 @@ export default class LoadingScene extends Phaser.Scene {
               frameHeight: 60
         });
 
+        this.load.spritesheet('pl_perry', 
+            pl_perryImg, {
+              frameWidth: 64,
+              frameHeight: 68
+        });
+
         this.load.spritesheet('pl_AA1', // AutoAttack
             pl_AA1Img, {
               frameWidth: 80,
@@ -177,8 +185,8 @@ export default class LoadingScene extends Phaser.Scene {
         });
 
         this.load.spritesheet("perryEffect" , perryEffectImg, {
-            frameWidth: 48,
-            frameHeight: 48,
+            frameWidth: 144,
+            frameHeight: 144,
         });
 
         this.load.spritesheet("runEffect" , runEffectImg, {
@@ -279,6 +287,13 @@ export default class LoadingScene extends Phaser.Scene {
             key: "player_parry",
             frames: this.anims.generateFrameNumbers("player_parry"),
             frameRate: 1, // 3 = 1s
+            repeat: 0,
+        });
+
+        this.anims.create({
+            key: "pl_perry",
+            frames: this.anims.generateFrameNumbers("pl_perry"),
+            frameRate: 15, // 3 = 1s
             repeat: 0,
         });
 

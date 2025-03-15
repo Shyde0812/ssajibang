@@ -10,10 +10,10 @@ const attackConfig = {
     // Slash: { skill: "Slash", damage: 8, scale: 5, cooldown: 0.3 * 1000, anim: "player_AA_2" },
     // Fireball: { skill: "Fireball", damage: 12, scale: 3, cooldown: 1.5 * 1000, anim: "skill_fireball" }
 
-    Parrying : {
-        effect : "",
+    Perry : {
+        effect : "pl_perry",
         damage : 0,
-        scale : 2,
+        scale : 4,
         anim : "player_parry",
         cooldown : 0.3 * 1000,
     },
